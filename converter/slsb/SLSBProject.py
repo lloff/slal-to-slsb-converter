@@ -1,6 +1,6 @@
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
-from converter.animation.source.Animation import Animation
-from converter.SLALPack import SLALPack
+from converter.animationAnimation import Animation
+from converter.slal.SLALPack import SLALPack
 from converter.slsb.SLSBAnimsSchema import PositionExtraSchema, PositionSchema, SLSBPackSchema, SexSchema, StageSchema
 from converter.Arguments import Arguments
 from converter.slsb.SLSBProcessor import SLSBProcessor
@@ -98,7 +98,7 @@ class SLSBProject:
                 if position['event'] and len(position['event']) > 0:
                     SLSBProcessor.process_event(position, pack)
 
-                for file in pack.animation_files:
+                for file in pack.animation_sources:
                     if name in file.animations:
                         animation: Animation = file.animations[name]
                         SLSBProcessor.process_animation(animation, categories, position, extra)

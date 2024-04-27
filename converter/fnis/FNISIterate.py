@@ -1,4 +1,4 @@
-from converter.SLALPack import SLALPack
+from converter.slal.SLALPack import SLALPack
 import os
 
 

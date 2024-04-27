@@ -1,25 +1,19 @@
-from converter.Arguments import Arguments
-from converter.animation.Metadata import Metadata
-from converter.animation.source.Animation import Animation
-import os
-import pathlib
-import subprocess
-import shutil
-import json
-import argparse
-import json
+from converter.animation.Animation import Animation
 import re
-import pprint
 
-from converter.animation.Metadata import Metadata
-
-class AnimationFile:
-        metadata = Metadata()
+class AnimationSource:
+        filename: str = None
+        anim_dir: str = None
+        anim_id_prefix: str = None
+        anim_name_prefix: str = None
 
         current_animation = None
         inside_animation = False
 
         animations: dict[str, Animation] = dict()
+
+        def __init__(self, filename):
+            self.filename = filename
 
         def parse(self, file):
             for line in file:
@@ -43,13 +37,13 @@ class AnimationFile:
 
         def process_metadata(self, line):
             if re.match(r'^\s*anim_dir\("([^"]*)"\)', line):
-                self.metadata.anim_dir = re.search(r'anim_dir\("([^"]*)"\)', line).group(1)
+                self.anim_dir = re.search(r'anim_dir\("([^"]*)"\)', line).group(1)
             elif re.match(r'^\s*anim_id_prefix\("([^"]*)"\)', line):
-                self.metadata.anim_id_prefix = re.search(r'anim_id_prefix\("([^"]*)"\)', line).group(1)
+                self.anim_id_prefix = re.search(r'anim_id_prefix\("([^"]*)"\)', line).group(1)
             elif re.match(r'^\s*anim_name_prefix\("([^"]*)"\)', line):
-                self.metadata.anim_name_prefix = re.search(r'anim_name_prefix\("([^"]*)"\)', line).group(1)
+                self.anim_name_prefix = re.search(r'anim_name_prefix\("([^"]*)"\)', line).group(1)
             elif re.match(r'^\s*common_tags\("([^"]*)"', line):
-                self.metadata.common_tags = re.search(r'common_tags\("([^"]*)"', line).group(1)
+                self.common_tags = re.search(r'common_tags\("([^"]*)"', line).group(1)
 
         def process_animation_start(self, line):
             if re.match(r'^\s*Animation\(', line):
@@ -63,8 +57,8 @@ class AnimationFile:
 
             self.current_animation = None
 
-        def get_animation_name(self, current_animation):
-            return self.metadata.anim_name_prefix + current_animation.name
+        def get_animation_name(self, current_animation: Animation):
+            return self.anim_name_prefix + current_animation.name
              
         def start_new_animation(self, line):
             self.current_animation = Animation()

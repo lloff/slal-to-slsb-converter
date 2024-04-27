@@ -9,7 +9,7 @@ import re
 import pprint
 
 from converter.fnis.FNISIterate import FNISIterate
-from converter.SLALPack import SLALPack
+from converter.slal.SLALPack import SLALPack
 from converter.Arguments import Arguments
 
 class FNISBehavior:  

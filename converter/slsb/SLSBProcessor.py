@@ -1,7 +1,7 @@
-from converter.animation.source.Stage import ActorStage, AnimationStage
-from converter.animation.source.Actor import Actor
-from converter.animation.source.Animation import Animation
-from converter.SLALPack import SLALPack
+from converter.animationStage import ActorStage, AnimationStage
+from converter.animationActor import Actor
+from converter.animationAnimation import Animation
+from converter.slal.SLALPack import SLALPack
 from converter.slsb.SLSBAnimsSchema import ExtraSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
 from converter.Keywords import Keywords
 from converter.slsb.Categories import Categories

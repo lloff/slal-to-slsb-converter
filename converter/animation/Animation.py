@@ -1,5 +1,5 @@
-from converter.animation.source.Stage import AnimationStage
-from converter.animation.source.Actor import Actor
+from converter.animationStage import AnimationStage
+from converter.animationActor import Actor
 import re
 
 class Animation:
@@ -73,7 +73,7 @@ class Animation:
         if actor_match:
             actor_number = actor_match.group(1)
 
-            self.current_actor = Actor(actor_number)
+            self.current_actor = Actor(actor_number, self.name)
             self.current_actor.parse_line(line)
 
     def finish_actor(self):

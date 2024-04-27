@@ -1,8 +1,10 @@
+from converter.slsb.SLALExportToSLSB import SLALExportToSLSB
+from converter.Loader import Loader
 from converter.fnis.FNISBehavior import FNISBehavior
-from converter.SLALPack import SLALPack
+from converter.slal.SLALPack import SLALPack
 from converter.Arguments import Arguments
-from converter.SLALConverter import SLALConverter
-from converter.animation.AnimationConverter import AnimationConverter
+from converter.slal.SLALRepairer import SLALRepairer
+#from converter.animation.AnimationConverter import AnimationLoader
 from converter.fnis.FNISConverter import FNISConverter
 from converter.slsb.SLSBProject import SLSBProject
 
@@ -18,17 +20,20 @@ import pprint
 
 class SLALPackConverter:
 
-    def convert(dir):
+    def start(dir):
         pack = SLALPack(dir);
         if not pack.validate():
             print(f"Pack {pack.toString()} failed validation")
             return;
 
         pack.setup()
-            
-        SLALConverter.convert(pack)
 
-        AnimationConverter.convert(pack)
+        Loader.load_SLALs(pack)
+        Loader.load_animation_sources(pack)
+            
+        SLALRepairer.repair_slals(pack)
+
+        SLALExportToSLSB.convert_to_slsb(pack)
 
         FNISConverter.convert(pack)
 

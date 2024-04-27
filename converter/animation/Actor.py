@@ -1,12 +1,13 @@
-from converter.animation.source.Stage import ActorStage
+from converter.animationStage import ActorStage
 import re
 
 
 class Actor:
-    def __init__(self, number):
+    def __init__(self, number, scene_name):
+        self.scene_name = scene_name
         self.number = number
         self.stages: dict[str, ActorStage] = {}
-        self.type = None
+        self.gender: str = None
         self.args = {}
 
         self.current_stage: ActorStage = None
@@ -27,7 +28,7 @@ class Actor:
 
             if(actor_match.group(1) == self.number):
                 self.in_actor = True
-                self.type = actor_match.group(2)
+                self.gender = actor_match.group(2)
                 actor_args = actor_match.group(3)
 
                 args = re.findall(r'(\w+)=(?:"([^"]*)"|([^,)]+))', actor_args)
