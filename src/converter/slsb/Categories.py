@@ -32,14 +32,20 @@ class Categories:
     straight = False
     gay = False
     lesbian = False
-    has_strap_on = False
-    has_sos_value = False
-    has_add_cum = False
     futa = False
     scaling = False
 
     female_count = 0
     male_count = 0
+
+    has_strap_on = []
+    has_sos_value = []
+    has_schlong = []
+    has_add_cum = []
+    has_forward = []
+    has_side = []
+    has_up = []
+    has_rotate = []
 
     def get_categories(tags: list[str]) -> "Categories":
         categories = Categories()

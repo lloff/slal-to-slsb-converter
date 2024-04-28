@@ -287,14 +287,14 @@ class TagRepairer:
 
 
     def process_actor(actor: Actor, categories: Categories, position: PositionSchema) -> None:
-        #if 'object' in actor.args:
-            #position['anim_obj'] = actor.args['object'].replace(' ', ',')
+        
         if 'strap_on' in actor.args:
-            categories.has_strap_on = True
+            Tags.append_unique(categories.has_strap_on, actor.number)
         if 'sos' in actor.args:
-            categories.has_sos_value = True
-        #if 'add_cum' in actor.args:
-            #has_add_cum = True
+            Tags.append_unique(categories.has_sos_value, actor.number)
+        if 'add_cum' in actor.args:
+            Tags.append_unique(categories.has_add_cum, actor.number)
+
         if 'forward' in actor.args:
             position['offset']['x'] = float(actor.args['forward'])
         if 'side' in actor.args:
@@ -307,9 +307,23 @@ class TagRepairer:
         if(len(actor.stages) > 0):
             for stage in actor.stages.values():
                 if stage.strap_on is not False:
-                    categories.has_strap_on = True
+                    Tags.append_unique(categories.has_strap_on, actor.number)
                 if stage.sos is not None:
-                    categories.has_sos_value = True
+                     Tags.append_unique(categories.has_sos_value, actor.number)
+
+                    ## TODO:
+                    # has_sos_value = event_key
+                     #if event_key in has_sos_value and int(event_key[4:]) == stage_num:
+                    #    pos_num = int(actor_key[1:]) - 1
+                    #    for pos in [positions[pos_num]]:
+                    #        pos['schlong'] = source_actor_stage_params['sos']
+                    # for futa
+                   # if has_schlong and actor_key[1:] not in has_schlong:
+                   #     has_schlong += f",{actor_key[1:]}"
+                   # else:
+                    #    has_schlong = actor_key[1:]
+                
+
                 if stage.forward is not None:
                     position['offset']['x'] = stage.forward
                 if stage.side is not None:
@@ -318,6 +332,38 @@ class TagRepairer:
                     position['offset']['z'] = stage.up
                 if stage.rotate is not None:
                     position['offset']['r'] = stage.rotate
+
+
+
+                    
+                ## TODO:
+                # if 'forward' in source_actor_stage_params and source_actor_stage_params['forward'] != 0:
+
+                #     has_forward = event_key
+
+                #     if event_key in has_forward and int(event_key[4:]) == stage_num:
+                #         pos_num = int(actor_key[1:]) - 1
+                #         for pos in [positions[pos_num]]:
+
+                #             pos['offset']['y'] = source_actor_stage_params['forward']
+                # if 'side' in source_actor_stage_params and source_actor_stage_params['side'] != 0:
+                #     has_side = event_key
+                #     if event_key in has_side and int(event_key[4:]) == stage_num:
+                #         pos_num = int(actor_key[1:]) - 1
+                #         for pos in [positions[pos_num]]:
+                #             pos['offset']['x'] = source_actor_stage_params['side']
+                # if 'up' in source_actor_stage_params and source_actor_stage_params['up'] != 0:
+                #     has_up = event_key
+                #     if event_key in has_up and int(event_key[4:]) == stage_num:
+                #         pos_num = int(actor_key[1:]) - 1
+                #         for pos in [positions[pos_num]]:
+                #             pos['offset']['z'] = source_actor_stage_params['up']
+                # if 'rotate' in source_actor_stage_params and source_actor_stage_params['rotate'] != 0:
+                #     has_rotate = event_key
+                #     if event_key in has_rotate and int(event_key[4:]) == stage_num:
+                #         pos_num = int(actor_key[1:]) - 1
+                #         for pos in [positions[pos_num]]:
+                #             pos['offset']['r'] = source_actor_stage_params['rotate']
           
                 
                 

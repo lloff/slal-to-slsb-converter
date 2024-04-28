@@ -16,9 +16,6 @@ class Actor:
 
     def get_name(self):
         return f"a{self.number}"
-    
-    def finish(self):
-        i = 0
         
     def add_stage_line(self, line):
         self.unparsed_stage_lines.append(line)
