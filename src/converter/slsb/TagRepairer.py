@@ -267,17 +267,17 @@ class TagRepairer:
                 sex['male'] = False
                 sex['female'] = True
 
-    def process_animations(pack: SLALPack, scene_name: str, categories: Categories, position: PositionSchema, extra: ExtraSchema) -> None:
+    def process_animations(pack: SLALPack, scene_name: str, categories: Categories, position: PositionSchema, extra: ExtraSchema, tags: list[str]) -> None:
         group: PackGroup
         for group in pack.groups.values():
             if scene_name in group.animation_source.animations:
                 animation: Animation = group.animation_source.animations[scene_name]
-                TagRepairer._process_animation(animation, categories, position, extra)
+                TagRepairer._process_animation(animation, categories, position, extra, tags)
 
-    def _process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema) -> None:
+    def _process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema, tags: list[str]) -> None:
         actor: Actor
         for actor in animation.actors.values():
-            TagRepairer.process_actor(actor, categories, position)
+            TagRepairer.process_actor(actor, categories, position, tags)
 
         stage: AnimationStage                
         for stage in animation.stages.values():
@@ -286,7 +286,7 @@ class TagRepairer:
                     extra['fixed_len'] = round(float(stage.timer), 2)
 
 
-    def process_actor(actor: Actor, categories: Categories, position: PositionSchema) -> None:
+    def process_actor(actor: Actor, categories: Categories, position: PositionSchema, tags: list[str]) -> None:
         
         if 'strap_on' in actor.args:
             Tags.append_unique(categories.has_strap_on, actor.number)
@@ -333,8 +333,7 @@ class TagRepairer:
                 if stage.rotate is not None:
                     position['offset']['r'] = stage.rotate
 
-
-
+        TagRepairer._process_actor_futanari(actor, categories, position['sex'], tags)
                     
                 ## TODO:
                 # if 'forward' in source_actor_stage_params and source_actor_stage_params['forward'] != 0:
@@ -365,8 +364,16 @@ class TagRepairer:
                 #         for pos in [positions[pos_num]]:
                 #             pos['offset']['r'] = source_actor_stage_params['rotate']
           
-                
-                
+    def _process_actor_futanari(actor: Actor, categories: Categories, sex: SexSchema, tags: list[str]) -> None:  
+        if 'anubs' in tags and ('ff' in tags or 'fff' in tags):
+            if actor.number in categories.has_schlong:
+                sex['female'] = False
+                sex['futa'] = True
+
+        if 'flufyfox' in tags:
+            if actor.number in categories.has_strap_on:
+                sex['female'] = False
+                sex['futa'] = True
                             
 
         

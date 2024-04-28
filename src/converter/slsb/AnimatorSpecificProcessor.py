@@ -1,45 +1,32 @@
 from converter.slsb.Categories import Categories
-from converter.slsb.SLSBGroupSchema import PositionSchema
+from converter.slsb.SLSBGroupSchema import PositionSchema, SceneSchema, SexSchema
 import re
 
 class AnimatorSpecificProcessor:                        
 
-    def process_futanari(tags: list[str], position: PositionSchema, categories: Categories, positions: list[PositionSchema]):
-        sex = position['sex']
+    def process_futanari(tags: list[str], position: PositionSchema, key: int, length: int):
+        sex: SexSchema = position['sex']
 
-        if ('solo' in tags) or ('futaall' in tags) or ('anubs' in tags and 'mf' in tags) or \
-            ('ff' in tags and 'frotting' in tags) or ('billyy' in tags and 'cf' in tags):
+        if 'solo' in tags or 'futaall' in tags or ('anubs' in tags and 'mf' in tags) or \
+            ('ff' in tags and ('frotting' in tags or 'milking' in tags)):
+                sex['female'] = False
+                sex['futa'] = True
 
-                if position['race'] == 'Human' and sex['female']:
-                    sex['female'] = False
-                    sex['futa'] = True
+        if 'billyy' in tags and 'cf' in tags:
+            if position['race'] == 'Flame Atronach':
+                sex['female'] = False
+                sex['futa'] = True
+        if 'billyy' in tags and '2futa' in tags and length == 3:
+            if key is 0 or key is 1:
+                position['sex']['female'] = False
+                position['sex']['futa'] = True
 
         if 'ff' in tags and sex['male']:
-           sex['male'] = False
-           sex['futa'] = True
+            sex['male'] = False
+            sex['futa'] = True
 
-        if 'anubs' in tags and ('ff' in tags or 'fff' in tags):
-            for actor_key, actor in position.items():
-                if 'sex' in actor_key and actor['female']:
-                    if categories.has_sos_value:
-                        actor['female'] = False
-                        actor['futa'] = True
 
-        if 'billyy' in tags and '2futa' in tags and len(positions) == 3:
-            for pos in [positions[0], positions[1]]:
-                for actor_key, actor in pos.items():
-                    if 'sex' in actor_key and actor['female']:
-                        actor['female'] = False
-                        actor['futa'] = True
-
-        if 'flufyfox' in tags:
-            for actor_key, actor in position.items():
-                if 'sex' in actor_key:
-                    if categories.has_strap_on:
-                        actor['female'] = False
-                        actor['futa'] = True
-
-    def process_scaling(tags: list[str], position: PositionSchema, name:str):
+    def process_scaling(tags: list[str], position: PositionSchema, name:str) -> None:
 
         pattern_bigguy = re.findall(r'(base\s?scale)\s?(\d+\.\d+)', name.lower())
         for match in pattern_bigguy:

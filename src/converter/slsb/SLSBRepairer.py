@@ -2,15 +2,12 @@ from converter.slsb.Categories import Categories
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
 from converter.animation.Animation import Animation
 from converter.slal.SLALPack import PackGroup, SLALPack
-from converter.slsb.SLSBGroupSchema import FurnitureSchema, PositionExtraSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
+from converter.slsb.SLSBGroupSchema import FurnitureSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
 from converter.Arguments import Arguments
 from converter.slsb.TagRepairer import TagRepairer
 import subprocess
 import shutil
 import json
-import os
-
-from converter.slsb.Tags import Tags
 
 class SLSBRepairer:
     def repair(pack: SLALPack):
@@ -64,14 +61,16 @@ class SLSBRepairer:
                     
             positions: list[PositionSchema] = stage['positions']
 
+            length = len(positions)
+
             for i, position in enumerate(positions):
-                SLSBRepairer._process_position(position, tags, categories, pack, scene_name, stage, i == 0)
+                SLSBRepairer._process_position(position, tags, categories, pack, scene_name, stage, i, length)
 
             TagRepairer.check_anim_object_found(stage, furniture, positions)
         
             stage['tags'] = tags
 
-    def _process_position(position: PositionSchema, tags: list[str], categories: Categories, pack: SLALPack, scene_name: str, stage: StageSchema, key: int):
+    def _process_position(position: PositionSchema, tags: list[str], categories: Categories, pack: SLALPack, scene_name: str, stage: StageSchema, key: int, length: i):
         sex: SexSchema = position['sex']
 
         TagRepairer.process_extra(position, sex, categories, tags, key == 0)
@@ -88,7 +87,7 @@ class SLSBRepairer:
         TagRepairer.process_animations(pack, categories, position, stage['extra'])
 
         if categories.futa:
-            AnimatorSpecificProcessor.process_futanari(tags, position, categories, stage['positions'])
+            AnimatorSpecificProcessor.process_futanari(tags, position, categories, key, length)
 
         if categories.scaling:
             AnimatorSpecificProcessor.process_scaling(tags, position, scene_name)
