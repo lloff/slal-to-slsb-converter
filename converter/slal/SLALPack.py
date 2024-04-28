@@ -1,6 +1,6 @@
+from converter.animation.AnimationSource import AnimationSource
 from converter.slal.SLALPackSchema import SLALPackSchema
 from converter.slsb.SLSBAnimsSchema import SLSBPackSchema
-from converter.animation.AnimationSource import AnimationSource
 from converter.fnis.FNISAnimationStage import FNISAnimationStage
 from converter.Arguments import Arguments
 import os
@@ -51,5 +51,5 @@ class SLALGroup:
     def __init__(self, name):
         self.name = name
         self.slal_json_filename: str = name + ".json"
-        self.slsb_json_path: str = name + ".slsb.json"
+        self.slsb_json_filename: str = name + ".slsb.json"
 

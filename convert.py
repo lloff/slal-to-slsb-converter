@@ -1,3 +1,4 @@
+from converter.slate.SlateParser import SlateParser
 from converter.SLALPackConverter import SLALPackConverter
 from converter.Arguments import Arguments
 import os
@@ -19,7 +20,7 @@ parser.add_argument('working', help='path to your working directory; should be s
 parser.add_argument('-a', '--author', help='name of the author of the pack', default="Unknown")
 parser.add_argument('-c', '--clean', help='clean up temp dir after conversion', action='store_true')
 parser.add_argument('-s', '--skyrim', help='path to your skyrim directory', default=None)
-parser.add_argument('-slt', '--slate', help='path to the directory containig SLATE_ActionLog jsons', default=None) 
+parser.add_argument('-slt', '--slate', help='path to the directory containing SLATE_ActionLog jsons', default=None) 
 parser.add_argument('-ra', '--remove_anims', help='remove copied animations during fnis behaviour gen', action='store_true')
 parser.add_argument('-nb', '--no_build', help='do not build the slsb project', action='store_true')
 

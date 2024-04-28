@@ -2,7 +2,7 @@ from marshmallow import ValidationError
 from converter.slal.SLALPackSchema import SLALPackSchema
 from converter.slal.SLALPack import SLALGroup, SLALPack
 from converter.Arguments import Arguments
-from converter.animation.AnimationSource import AnimationSource
+from converter.animationAnimationSource import AnimationSource
 import os
 import pathlib
 import subprocess
