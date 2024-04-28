@@ -1,4 +1,4 @@
-from converter.slsb.SLALExportToSLSB import SLALExportToSLSB
+from converter.Exporter import Exporter
 from converter.Loader import Loader
 from converter.fnis.FNISBehavior import FNISBehavior
 from converter.slal.SLALPack import SLALPack
@@ -12,7 +12,7 @@ class SLALPackConverter:
     def start(dir):
         pack = SLALPack(dir);
         if not pack.validate():
-            print(f"Pack {pack.toString()} failed validation")
+            print(f"Pack {pack.toString()} | failed validation")
             return;
 
         pack.setup()
@@ -21,7 +21,7 @@ class SLALPackConverter:
             
         SLALRepairer.repair(pack)
 
-        SLALExportToSLSB.convert_to_slsb(pack)
+        Exporter.convert_slal_to_slsb(pack)
 
         FNISParser.convert(pack)
 
@@ -29,4 +29,8 @@ class SLALPackConverter:
 
         SLSBRepairer.repair(pack)
 
+        Exporter.export_corrected_slsbs(pack)
+
         FNISBehavior.build(pack)
+
+        print(f"Pack {pack.toString()} | Done")

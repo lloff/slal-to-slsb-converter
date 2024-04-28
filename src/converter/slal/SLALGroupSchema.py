@@ -10,6 +10,7 @@ class ActorStageSchema(Schema):
     side = fields.Float(required = False)
     rotate = fields.Float(required = False)
     forward = fields.Float(required = False)
+    add_cum = fields.Integer(required = False)
 
 class ActorSchema(Schema):
     type = fields.String(required = True)

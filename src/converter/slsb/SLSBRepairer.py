@@ -1,36 +1,18 @@
 from converter.slsb.Categories import Categories
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
-from converter.animation.Animation import Animation
 from converter.slal.SLALPack import PackGroup, SLALPack
 from converter.slsb.SLSBGroupSchema import FurnitureSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
 from converter.Arguments import Arguments
 from converter.slsb.TagRepairer import TagRepairer
-import subprocess
-import shutil
-import json
 
 class SLSBRepairer:
-    def repair(pack: SLALPack):
+    def repair(pack: SLALPack) -> None:
         group: PackGroup
         for group in pack.groups.values():
 
             print(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json")
 
             SLSBRepairer._correct(group, pack)
-            SLSBRepairer._export_corrected(group, pack.out_dir)
-
-    def _export_corrected(group: PackGroup, out_dir: str):
-        edited_path = Arguments.temp_dir + '/edited/' + group.slsb_json_filename
-
-        with open(edited_path, 'w') as f:
-            json.dump(group.slsb_json, f, indent=2)
-        
-        if not Arguments.no_build:
-            output = subprocess.Popen(f"{Arguments.slsb_path} build --in \"{edited_path}\" --out \"{out_dir}\"", stdout=subprocess.PIPE).stdout.read()
-            #print(output)
-            shutil.copyfile(edited_path, out_dir + '/SKSE/Sexlab/Registry/Source/' + group.slsb_json_filename)
-
-
 
     def _correct(group: PackGroup,  pack: SLALPack) -> None:
         group.slsb_json['pack_author'] = Arguments.author
@@ -93,7 +75,7 @@ class SLSBRepairer:
         TagRepairer.process_animations(pack, scene_name, categories, position, stage['extra'], tags)
 
         if categories.futa:
-            AnimatorSpecificProcessor.process_futanari(tags, position, categories, key, length)
+            AnimatorSpecificProcessor.process_futanari(tags, position, key, length)
 
         if categories.scaling:
             AnimatorSpecificProcessor.process_scaling(tags, position, scene_name)

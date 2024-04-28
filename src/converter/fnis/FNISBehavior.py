@@ -24,6 +24,9 @@ class FNISBehavior:
             FNISIterate.iterate_folders(anim_dir, pack, FNISBehavior.build_behavior)
 
     def build_behavior(parent_dir, list_name, pack: SLALPack):
+
+        print(f"{pack.toString()} | Building {list_name}")
+
         list_path = os.path.join(parent_dir, list_name)
 
         if '_canine' in list_name.lower():
@@ -37,7 +40,11 @@ class FNISBehavior:
         cwd = os.getcwd()
         os.chdir(Arguments.fnis_path)
         output = subprocess.Popen(f"./commandlinefnisformodders.exe \"{list_path}\"", stdout=subprocess.PIPE).stdout.read()
-        #print(output)
+        
+        to_print: list[str] = output.decode().split("\n")
+        [print(f"{pack.toString()} | " + line) for line in to_print]
+        
+        
         os.chdir(cwd)
 
         out_path = os.path.normpath(list_path)
