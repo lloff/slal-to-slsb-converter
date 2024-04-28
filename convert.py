@@ -15,7 +15,8 @@ parser = argparse.ArgumentParser(
                     prog='Sexlab Catalytic Converter',
                     description='Converts SLAL anims to SLSB automagically')
 
-parser.add_argument('--slsb', help='path to your slsb executable')
+parser.add_argument('-slsb', '--slsb', help='path to your slsb executable')
+parser.add_argument('-t', '--temp', help='path to a temp directory', default='/temp')
 parser.add_argument('-a', '--author', help='name of the author of the pack', default="Unknown")
 parser.add_argument('-c', '--clean', help='clean up temp dir after conversion', action='store_true')
 parser.add_argument('-s', '--skyrim', help='path to your skyrim directory', default=None)

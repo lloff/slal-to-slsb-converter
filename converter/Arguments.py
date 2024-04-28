@@ -21,7 +21,7 @@ class Arguments:
         
         Arguments.author = args.author
 
-        Arguments.temp_dir = 'tmp'
+        Arguments.temp_dir = args.temp
 
         Arguments.no_build = args.no_build
         Arguments.clean = args.clean
