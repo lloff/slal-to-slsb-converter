@@ -6,12 +6,14 @@ import os
 class FNISParser:
             
     def convert(pack: SLALPack):
+        print(f"{pack.toString()} | Parsing FNIS animation stages")
         for filename in os.listdir(pack.actor_dir):
-            print(f"{pack.toString()} | {filename} | Parsing FNIS animation stages")
             path = os.path.join(pack.actor_dir, filename)
 
             if os.path.isdir(path):
                 FNISIterate.iterate_folders(path, pack, FNISParser.parse_fnis_list)
+
+        print(f"{pack.toString()} | {len(pack.FNIS_data)} FNIS animation stages parsed") 
 
 
     def parse_fnis_list(parent_dir, file, pack: SLALPack):
@@ -26,7 +28,6 @@ class FNISParser:
                 stage: FNISAnimationStage = FNISParser.parse_fnis_animation_stage(line, parent_dir, previous_stage)
 
                 if(stage):
-
                     pack.FNIS_data.update({stage.name: stage})
 
                     if(stage.in_sequence):

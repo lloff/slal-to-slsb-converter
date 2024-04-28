@@ -14,7 +14,7 @@ class Keywords:
     forced: list[str] = ['forced', 'rape', 'fbrape', 'force', 'rough', 'aggressive']
 
  ##  uses_only_agg_tag = ['leito', 'kom', 'flufyfox', 'gs', 'cobalt', 'mastermike', 'nya', 'rydin', 'nibbles', 'anubs']
-    furni: list[str] = [
+    furniture: list[str] = [
         'alchemywb', 'bed', 'bench', 'cage', 'chair', 'coffin', 'counter', 'couch', 'desk',
         'doublebed', 'doublebeds', 'drawer', 'dwemerchair', 'enchantingwb', 'furn', 'furotub',
         'gallows', 'haybale', 'javtable', 'lowtable', 'necrochair', 'pillory', 'pillorylow',

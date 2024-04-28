@@ -23,7 +23,7 @@ class Loader:
         Loader._load_animation_sources(pack)
 
     def _init(pack: SLALPack) -> None:
-         for filename in os.listdir(pack.slal_dir):
+        for filename in os.listdir(pack.slal_dir):
              
             path = os.path.join(pack.slal_dir, filename)
 
@@ -33,6 +33,8 @@ class Loader:
                 group = PackGroup(name)
 
                 pack.groups[group.name] = group
+
+        print(f"{pack.toString()} | {len(pack.groups)} Groups Found")
 
 
     def _load_SLALs(pack: SLALPack):
@@ -54,20 +56,31 @@ class Loader:
 
 
     def _load_animation_sources(pack: SLALPack):
-        for filename in os.listdir(pack.anim_source_dir):
-            print(f"{pack.toString()} | {filename} | Loading animation text file")
-            path = os.path.join(pack.anim_source_dir, filename)
-            ext = pathlib.Path(filename).suffix
-            stem = pathlib.Path(filename).stem
+        print(f"{pack.toString()} | Loading animation source files")
+        
+        files: list[str] = os.listdir(pack.anim_source_dir)
 
-            if os.path.isfile(path) and ext == ".txt":
+        group: PackGroup
+        for group in pack.groups.values():
+            
+
+            filename = group.name + '.txt'
+            if filename in files:
+                files.remove(filename)
+            
+            path = os.path.join(pack.anim_source_dir, filename)
+
+            if os.path.isfile(path):
                 with open(path, "r") as file:
-                    animation_source = AnimationSource(stem)
+                    animation_source = AnimationSource(group.name)
                     animation_source.parse(file)
 
-                    group = pack.groups.get(stem)
-                    if (group is not None):
-                        group.animation_source = animation_source
+                    group.animation_source = animation_source
+            else:
+                print(f"{pack.toString()} | {group.name} | WARNING: animation source not found")
+
+        if len(files) > 0:
+            print(f"{pack.toString()} | {group.name} | WARNING: Extra animation source files found: {files}")
 
 
 

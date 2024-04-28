@@ -34,6 +34,7 @@ class Categories:
     lesbian = False
     futa = False
     scaling = False
+    anim_object_found = False
 
     female_count = 0
     male_count = 0

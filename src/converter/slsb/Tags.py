@@ -14,6 +14,6 @@ class Tags:
     def get_keyword_in_tags(tags: list[str], keywords: list[str]) -> str:
         return next(item in tags for item in keywords)
     
-    def append_unique(add: str, list: list[str]) -> None:
+    def append_unique(list: list[str], add: str) -> None:
         if add not in list:
             list.append(add)

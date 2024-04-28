@@ -16,7 +16,7 @@ from converter.Arguments import Arguments
 class FNISBehavior:  
 
     def build(pack: SLALPack):
-        print(f"{pack.toString()} Building FNIS behaviors")
+        print(f"{pack.toString()} | Building FNIS behaviors")
         
         if Arguments.fnis_path is not None:
             anim_dir = pack.out_dir + '\\meshes\\actors'
@@ -28,8 +28,6 @@ class FNISBehavior:
 
         if '_canine' in list_name.lower():
             return
-
-        print('generating', list_path)
 
         behavior_file_name = list_name.lower().replace('fnis_', '')
         behavior_file_name = behavior_file_name.lower().replace('_list.txt', '')
@@ -64,9 +62,11 @@ class FNISBehavior:
             out_behavior_path = os.path.join(out_behavior_dir, behavior_file_name)
             os.makedirs(out_behavior_dir, exist_ok=True)
             shutil.copyfile(behavior_path, out_behavior_path)
-        if " " in anim_dir_name:
-            print("")
-            print(f'WARNING: FNIS could not generate HKX for {list_name}; use HKXCONV to manually convert the temporarily generated xml to hkx (xml generated into Data/tools/GenerateFNIS_for_Modders/temporary_logs/)')
+
+      ## TODO:
+       ## if " " in pack.anim_dir_name:
+       #     print("")
+       #    print(f'WARNING: FNIS could not generate HKX for {list_name}; use HKXCONV to manually convert the temporarily generated xml to hkx (xml generated into Data/tools/GenerateFNIS_for_Modders/temporary_logs/)')
 
         if Arguments.remove_anims:
             for filename in os.listdir(parent_dir):

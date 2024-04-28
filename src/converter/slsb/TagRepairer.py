@@ -44,7 +44,7 @@ class TagRepairer:
 
         Tags.if_then_add(tags, scene_name, anim_dir_name, ['inv'], 'invisfurn')
 
-        Tags.if_then_add(tags, scene_name, anim_dir_name, Keywords.furni, 'furniture')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, Keywords.furniture, 'furniture')
 
         if 'invisfurn' in tags and 'furniture' in tags:
             tags.remove('furniture')
@@ -182,8 +182,9 @@ class TagRepairer:
             if tag == 'laying' and 'eggs' not in tags:
                 tags[i] = 'lying'
     
-    def process_extra(sex: SexSchema, categories: Categories, tags: list[str], position: PositionSchema, first: bool) -> None:
+    def process_extra(position: PositionSchema, categories: Categories, tags: list[str], first: bool) -> None:
          extra: PositionExtraSchema = position['extra']
+         sex = SexSchema = position['sex']
 
          if categories.submissive:
             if categories.straight and categories.female_count == 1 and 'femdom' not in tags and sex['female']:
@@ -225,15 +226,14 @@ class TagRepairer:
             if data.anim_obj is not None:     # The part responsible for AnimObject incorporation
                 position['anim_obj'] = ','.join(data.anim_obj)
 
-    def check_anim_object_found(tags: list[str], furniture: FurnitureSchema, positions: list[PositionSchema]) -> None:
-        anim_obj_found = any(pos['anim_obj'] != "" and "cum" not in pos['anim_obj'].lower() for pos in positions)
+    def check_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema) -> None:
 
-        if not anim_obj_found and 'toys' in tags:
+        if not categories.anim_object_found and 'toys' in tags:
             tags.remove('toys')
-        if anim_obj_found and 'toys' not in tags:
+        if categories.anim_object_found and 'toys' not in tags:
             tags.append('toys')   
 
-        if 'lying' in tags and not anim_obj_found:
+        if 'lying' in tags and not categories.anim_object_found:
             furniture['allow_bed'] = True
 
         #if 'invisfurn' in tags:
@@ -267,14 +267,14 @@ class TagRepairer:
                 sex['male'] = False
                 sex['female'] = True
 
-    def process_animations(pack: SLALPack, scene_name: str, categories: Categories, position: PositionSchema, extra: ExtraSchema, tags: list[str]) -> None:
+    def process_animations(pack: SLALPack, scene_name: str, categories: Categories, position: PositionSchema, stage_extra: ExtraSchema, tags: list[str]) -> None:
         group: PackGroup
         for group in pack.groups.values():
-            if scene_name in group.animation_source.animations:
+            if group.animation_source is not None and scene_name in group.animation_source.animations:
                 animation: Animation = group.animation_source.animations[scene_name]
-                TagRepairer._process_animation(animation, categories, position, extra, tags)
+                TagRepairer._process_animation(animation, categories, position, stage_extra, tags)
 
-    def _process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema, tags: list[str]) -> None:
+    def _process_animation(animation: Animation, categories: Categories, position: PositionSchema, stage_extra: ExtraSchema, tags: list[str]) -> None:
         actor: Actor
         for actor in animation.actors.values():
             TagRepairer.process_actor(actor, categories, position, tags)
@@ -283,7 +283,7 @@ class TagRepairer:
         for stage in animation.stages.values():
             if stage.name.startswith('Stage'):
                 if stage.timer is not None:
-                    extra['fixed_len'] = round(float(stage.timer), 2)
+                    stage_extra['fixed_len'] = round(float(stage.timer), 2)
 
 
     def process_actor(actor: Actor, categories: Categories, position: PositionSchema, tags: list[str]) -> None:
@@ -309,7 +309,7 @@ class TagRepairer:
                 if stage.strap_on is not False:
                     Tags.append_unique(categories.has_strap_on, actor.number)
                 if stage.sos is not None:
-                     Tags.append_unique(categories.has_sos_value, actor.number)
+                    Tags.append_unique(categories.has_sos_value, actor.number)
 
                     ## TODO:
                     # has_sos_value = event_key

@@ -17,13 +17,11 @@ class SLALPack:
 
         self.actor_dir = self.working_dir + '\\meshes\\actors'
 
-        self.animations = {}
-
         self.FNIS_data: dict[str, FNISAnimationStage] = dict()
 
         self.groups: dict[str, PackGroup] = dict()
 
-        print(f"{self.toString()} Found")
+        print(f"{self.toString()} | Found")
         
 
     def validate(self):
@@ -46,10 +44,13 @@ class PackGroup:
     slal_json: SLALGroupSchema
     slsb_json: SLSBGroupchema
     animation_source: AnimationSource
-    anim_dir_name: str
     
     def __init__(self, name):
         self.name = name
         self.slal_json_filename: str = name + ".json"
         self.slsb_json_filename: str = name + ".slsb.json"
+
+        self.animation_source = None
+        self.slal_json = None
+        self.slsb_json = None
 
