@@ -11,15 +11,15 @@ import shutil
 
 class SLSBTagProcessor:
 
-    def remove_slate_tags(tags, name):
-        slate_action_logs = SlateParser.parse()
+    def remove_slate_tags(pack: SLALPack, tags: list[str], stage_name):
+        slate_action_logs = SlateParser.parse(pack)
 
         if slate_action_logs is not None:
             TagToAdd = ''
             TagToRemove = ''
             for slate_action_log in slate_action_logs:
                 for action in slate_action_log.actions:
-                    if name.lower() in action['anim'].lower():
+                    if stage_name.lower() in action['anim'].lower():
                         if action['action'].lower() == 'addtag':
                             TagToAdd = action['tag'].lower()
                             if TagToAdd not in tags:
@@ -79,12 +79,14 @@ class SLSBTagProcessor:
             tags.remove('')
 
     def _if_then_add(tags: list[str], stage_name:str, anim_dir_name: str, check: list[str], add: str):
-        if(add not in tags and any(check in tags) or any(check in stage_name) or any(check in anim_dir_name)):
-            tags.append(add)
+
+        if add not in tags and (any(item in tags for item in check) or any(item in stage_name for item in check) or any(item in anim_dir_name for item in check)):
+            if add not in tags:
+                tags.append(add)
 
 
-    def append_missing_slate_tags(tags, stage_num):
-        slate_action_logs = SlateParser.parse()
+    def append_missing_slate_tags(tags, pack, stage_num):
+        slate_action_logs = SlateParser.parse(pack)
 
         if(slate_action_logs is not None):
             asl_en = str(stage_num) + "en"  # end_stage

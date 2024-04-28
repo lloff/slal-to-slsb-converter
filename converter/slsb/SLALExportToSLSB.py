@@ -12,10 +12,6 @@ class SLALExportToSLSB:
         for group in pack.groups.values():
             path = os.path.join(pack.slal_dir, group.slal_json_filename)
 
-            ext = pathlib.Path(group.name).suffix
-
-           # pack.anim_json_names.append(json_name)
-
-            if os.path.isfile(path) and ext == ".json":
+            if os.path.isfile(path):
                 print(f"{pack.toString()} | {group.name} | Converting SLAL json to SLSB...")
                 output = subprocess.Popen(f"{Arguments.slsb_path} convert --in \"{path}\" --out \"{Arguments.temp_dir}\"", stdout=subprocess.PIPE).stdout.read()

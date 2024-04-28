@@ -15,7 +15,7 @@ import json
 class SLSBProject:
     def build(pack: SLALPack):
         group: SLALGroup
-        for group in pack.groups:
+        for group in pack.groups.values():
 
             path = os.path.join(Arguments.temp_dir, group.slsb_json_filename)
             
@@ -58,9 +58,9 @@ class SLSBProject:
             
             tags = [tag.lower().strip() for tag in stage['tags']]
 
-            SLSBTagProcessor.remove_slate_tags(tags, scene_name)
+            SLSBTagProcessor.remove_slate_tags(pack, tags, scene_name)
             SLSBTagProcessor.append_missing_tags(tags, scene_name, group.anim_dir_name)
-            SLSBTagProcessor.append_missing_slate_tags(tags, stage.id)
+            SLSBTagProcessor.append_missing_slate_tags(tags, pack, stage['id'])
             SLSBTagProcessor.correct_tags(tags)
             SLSBTagProcessor.check_toy_tag(stage)
 
@@ -84,7 +84,7 @@ class SLSBProject:
             categories.applied_restraint = categories.restraint == ''
 
             for i, position in enumerate(positions):
-                SLSBProject._process_position(position, tags, categories, pack, scene_name, stage, i = 0)
+                SLSBProject._process_position(position, tags, categories, pack, scene_name, stage, i == 0)
         
             stage['tags'] = tags
 
@@ -99,7 +99,7 @@ class SLSBProject:
             SLSBTagProcessor.process_event(position, pack)
 
         group: SLALGroup
-        for group in pack.groups:
+        for group in pack.groups.values():
             if scene_name in group.animation_source.animations:
                 animation: Animation = group.animation_source.animations[scene_name]
                 SLSBTagProcessor.process_animation(animation, categories, position, stage['extra'])

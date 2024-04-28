@@ -1,4 +1,4 @@
-from converter.animationStage import ActorStage
+from converter.animation.Stage import ActorStage
 import re
 
 

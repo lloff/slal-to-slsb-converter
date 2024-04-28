@@ -6,7 +6,7 @@ from converter.slal.SLALPack import SLALPack
 from converter.Arguments import Arguments
 from converter.slal.SLALRepairer import SLALRepairer
 #from converter.animation.AnimationConverter import AnimationLoader
-from Tools.converter.fnis.FNISParser import FNISParser
+from converter.fnis.FNISParser import FNISParser
 from converter.slsb.SLSBProject import SLSBProject
 
 import os
@@ -37,8 +37,6 @@ class SLALPackConverter:
         SLALExportToSLSB.convert_to_slsb(pack)
 
         FNISParser.convert(pack)
-
-        SlateParser.parse(pack)
 
         SLSBProject.build(pack)
 

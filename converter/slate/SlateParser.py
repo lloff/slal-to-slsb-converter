@@ -1,10 +1,11 @@
+from converter.slal.SLALPack import SLALPack
 from converter.slate.SlateActionLog import SlateAction, SlateActionLog
 from converter.Arguments import Arguments
 import os
 import json
 
 class SlateParser:
-    def parse():
+    def parse(pack: SLALPack):
 
         ## TODO - at the moment this code must only load at the base slate_path
         ## Was it intended? Was it intended to look in the individual pack url instead?

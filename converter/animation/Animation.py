@@ -1,5 +1,5 @@
-from converter.animationStage import AnimationStage
-from converter.animationActor import Actor
+from converter.animation.Stage import AnimationStage
+from converter.animation.Actor import Actor
 import re
 
 class Animation:
