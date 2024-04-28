@@ -1,15 +1,16 @@
 from converter.slate.SlateParser import SlateParser
-from converter.animation.Stage import ActorStage, AnimationStage
+from converter.animation.Stage import ActorStage
 from converter.animation.Actor import Actor
 from converter.animation.Animation import Animation
 from converter.slal.SLALPack import SLALPack
-from converter.slsb.SLSBAnimsSchema import ExtraSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
+from converter.slsb.SLSBGroupSchema import ExtraSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
 from converter.Keywords import Keywords
 from converter.slsb.Categories import Categories
+from converter.slsb.Tags import Tags
 import os
 import shutil
 
-class SLSBTagProcessor:
+class TagRepairer:
 
     def remove_slate_tags(pack: SLALPack, tags: list[str], stage_name):
         slate_action_logs = SlateParser.parse(pack)
@@ -29,63 +30,57 @@ class SLSBTagProcessor:
                             if TagToRemove in tags:
                                 tags.remove(TagToRemove)
 
-    def append_missing_tags(tags, stage_name, anim_dir_name):
+    def append_missing_tags(tags: list[str], scene_name: str, anim_dir_name: str) -> None:
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['basescale', 'base scale', 'setscale', 'set scale', 'bigguy'], 'scaling')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['basescale', 'base scale', 'setscale', 'set scale', 'bigguy'], 'scaling')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['femdom', 'amazon', 'femaledomination', 'female domination', 'leito xcross standing'], 'femdom')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['femdom', 'amazon', 'femaledomination', 'female domination', 'leito xcross standing'], 'femdom')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['guro', 'execution'], 'gore')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['guro', 'execution'], 'gore')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, Keywords.magic, 'magic')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, Keywords.magic, 'magic')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['choke', 'choking'], 'asphyxiation')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['choke', 'choking'], 'asphyxiation')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['inv'], 'invisfurn')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['inv'], 'invisfurn')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, Keywords.furni, 'furniture')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, Keywords.furni, 'furniture')
 
         if 'invisfurn' in tags and 'furniture' in tags:
             tags.remove('furniture')
         
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['facesit'], 'facesitting')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['facesit'], 'facesitting')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['lotus'], 'lotusposition')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['lotus'], 'lotusposition')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['trib', 'tribbing'], 'tribadism')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['trib', 'tribbing'], 'tribadism')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['doggystyle', 'doggy'], 'doggy')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['doggystyle', 'doggy'], 'doggy')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['spank'], 'spanking')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['spank'], 'spanking')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['dp', 'doublepen'], 'doublepenetration')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['dp', 'doublepen'], 'doublepenetration')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['tp', 'triplepen'], 'triplepenetration')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['tp', 'triplepen'], 'triplepenetration')
         
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['lying', 'laying'], 'triplepenetration')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['lying', 'laying'], 'triplepenetration')
            
         if 'lying' in tags and 'laying' in tags and 'eggs' not in tags:
             tags.remove('laying')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['rimjob'], 'rimming')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['rimjob'], 'rimming')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['kiss'], 'kissing')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['kiss'], 'kissing')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['hold'], 'holding')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['hold'], 'holding')
 
-        SLSBTagProcessor._if_then_add(tags, stage_name, anim_dir_name, ['69'], 'sixtynine')
+        Tags._if_then_add(tags, scene_name, anim_dir_name, ['69'], 'sixtynine')
 
         if '' in tags:
             tags.remove('')
+                
 
-    def _if_then_add(tags: list[str], stage_name:str, anim_dir_name: str, check: list[str], add: str):
-
-        if add not in tags and (any(item in tags for item in check) or any(item in stage_name for item in check) or any(item in anim_dir_name for item in check)):
-            if add not in tags:
-                tags.append(add)
-
-
-    def append_missing_slate_tags(tags, pack, stage_num):
+    def append_missing_slate_tags(tags: list[str], pack: SLALPack, stage_num: int):
         slate_action_logs = SlateParser.parse(pack)
 
         if(slate_action_logs is not None):
@@ -170,31 +165,7 @@ class SLSBTagProcessor:
                     tags.remove('sranaltmp')
                 if 'srvagtmp' in tags:
                     tags.remove('srvagtmp')
-
-
-    def get_categories(tags: list[str]):
-        categories = Categories()
-
-        for tag in tags:
-            if tag in Keywords.sub:
-                categories.sub = True
-                categories.maledom = True
-            if tag in Keywords.restraints:
-                categories.sub = True
-                categories.maledom = True
-                categories.restraint = Keywords.restraints[tag]
-            if tag in Keywords.femdom:
-                categories.maybe_femdom = True
-            if tag in Keywords.dead:
-                categories.dead = True
-            if tag == 'leadin':
-                categories.leadin = True
-            
-        if categories.sub and categories.maybe_femdom:
-            categories.maledom = False
-            categories.femdom = True
-
-        return categories
+        
     
     def correct_tags(tags):
         for i, tag in enumerate(tags):
@@ -265,7 +236,7 @@ class SLSBTagProcessor:
 
     def process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema):
         for key in animation.actors:
-            SLSBTagProcessor.process_actor(animation.actors[key], categories, position)
+            TagRepairer.process_actor(animation.actors[key], categories, position)
 
                         
         for key in animation.stages:

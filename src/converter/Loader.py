@@ -1,6 +1,6 @@
 from marshmallow import ValidationError
-from converter.slal.SLALPackSchema import SLALPackSchema
-from converter.slal.SLALPack import SLALGroup, SLALPack
+from converter.slal.SLALGroupSchema import SLALGroupSchema
+from converter.slal.SLALPack import PackGroup, SLALPack
 from converter.Arguments import Arguments
 from converter.animation.AnimationSource import AnimationSource
 import os
@@ -13,31 +13,47 @@ import json
 import re
 import pprint
 
+from converter.slsb.SLSBGroupSchema import SLSBGroupchema
+
 class Loader:
 
-    def load_SLALs(pack: SLALPack):
-        for filename in os.listdir(pack.slal_dir):
+    def load(pack: SLALPack) -> None:
+        Loader._init(pack)
+        Loader._load_SLALs(pack)
+        Loader._load_animation_sources(pack)
+
+    def _init(pack: SLALPack) -> None:
+         for filename in os.listdir(pack.slal_dir):
+             
             path = os.path.join(pack.slal_dir, filename)
 
             if os.path.isfile(path) and filename.lower().endswith(".json"):
                 name = pathlib.Path(filename).stem
 
-                group = SLALGroup(name)
+                group = PackGroup(name)
 
-                with open(path, "r") as file:
-                    data = json.load(file)
-
-                    schema = SLALPackSchema()
-                    try:
-                        group.slal_json: SLALPackSchema = schema.load(data)
-                    except ValidationError as err:
-                        print(err.messages)
-                
                 pack.groups[group.name] = group
 
 
+    def _load_SLALs(pack: SLALPack):
+        group: PackGroup
+        for group in pack.groups.values():
 
-    def load_animation_sources(pack: SLALPack):
+            path = os.path.join(pack.slal_dir, group.slal_json_filename)
+
+            with open(path, "r") as file:
+                data = json.load(file)
+
+                schema = SLALGroupSchema()
+
+                try:
+                    group.slal_json = schema.load(data)
+                except ValidationError as err:
+                    print(err.messages)
+
+
+
+    def _load_animation_sources(pack: SLALPack):
         for filename in os.listdir(pack.anim_source_dir):
             print(f"{pack.toString()} | {filename} | Loading animation text file")
             path = os.path.join(pack.anim_source_dir, filename)
@@ -52,3 +68,21 @@ class Loader:
                     group = pack.groups.get(stem)
                     if (group is not None):
                         group.animation_source = animation_source
+
+
+
+
+    def load_SLSBs(pack: SLALPack):
+        group: PackGroup
+        for group in pack.groups.values():
+
+            path = os.path.join(Arguments.temp_dir, group.slsb_json_filename)
+
+            with open(path, 'r') as file:
+                data = json.load(file)
+
+                schema = SLSBGroupchema()
+                try:
+                    group.slsb_json: SLSBGroupchema = schema.load(data)
+                except ValidationError as err:
+                    print(err.messages)

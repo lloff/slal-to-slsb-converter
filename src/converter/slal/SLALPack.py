@@ -1,6 +1,6 @@
 from converter.animation.AnimationSource import AnimationSource
-from converter.slal.SLALPackSchema import SLALPackSchema
-from converter.slsb.SLSBAnimsSchema import SLSBPackSchema
+from converter.slal.SLALGroupSchema import SLALGroupSchema
+from converter.slsb.SLSBGroupSchema import SLSBGroupchema
 from converter.fnis.FNISAnimationStage import FNISAnimationStage
 from converter.Arguments import Arguments
 import os
@@ -21,7 +21,7 @@ class SLALPack:
 
         self.FNIS_data: dict[str, FNISAnimationStage] = dict()
 
-        self.groups: dict[str, SLALGroup] = dict()
+        self.groups: dict[str, PackGroup] = dict()
 
         print(f"{self.toString()} Found")
         
@@ -29,7 +29,7 @@ class SLALPack:
     def validate(self):
         if not os.path.exists(self.slal_dir):
             return False
-        if not os.path.exists(self.anim_source_dir): ##todo does this always exist?
+        if not os.path.exists(self.anim_source_dir): ## TODO: Should this check be here? Or can this sometimes not exist?
             return False
         if not os.path.exists(self.actor_dir):
             return False
@@ -42,9 +42,9 @@ class SLALPack:
         return f"[SLALPack] {self.name}"
 
     
-class SLALGroup:
-    slal_json: SLALPackSchema
-    slsb_json: SLSBPackSchema
+class PackGroup:
+    slal_json: SLALGroupSchema
+    slsb_json: SLSBGroupchema
     animation_source: AnimationSource
     anim_dir_name: str
     

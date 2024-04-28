@@ -1,5 +1,5 @@
 from converter.slsb.Categories import Categories
-from converter.slsb.SLSBAnimsSchema import PositionSchema
+from converter.slsb.SLSBGroupSchema import PositionSchema
 import re
 
 class AnimatorSpecificProcessor:                        

@@ -69,7 +69,7 @@ class SceneSchema(Schema):
     private = fields.Boolean(required = True)
     has_warnings = fields.Boolean(required = True)
 
-class SLSBPackSchema(Schema):
+class SLSBGroupchema(Schema):
     pack_name = fields.String(required = True)
     pack_author = fields.String(required = True)
     prefix_hash = fields.String(required = True)

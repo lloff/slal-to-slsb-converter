@@ -1,6 +1,6 @@
 from converter.Arguments import Arguments
-from converter.slal.SLALPack import SLALGroup, SLALPack
-from converter.slal.SLALPackSchema import ActorSchema, AnimationSchema
+from converter.slal.SLALPack import PackGroup, SLALPack
+from converter.slal.SLALGroupSchema import ActorSchema, AnimationSchema
 import os
 import pathlib
 import subprocess
@@ -8,7 +8,7 @@ import subprocess
 class SLALExportToSLSB:
 
     def convert_to_slsb(pack: SLALPack):
-        group: SLALGroup
+        group: PackGroup
         for group in pack.groups.values():
             path = os.path.join(pack.slal_dir, group.slal_json_filename)
 

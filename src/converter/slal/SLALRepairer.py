@@ -1,27 +1,27 @@
 import json
 from converter.Arguments import Arguments
-from converter.slal.SLALPack import SLALGroup, SLALPack
-from converter.slal.SLALPackSchema import ActorSchema, AnimationSchema
+from converter.slal.SLALPack import PackGroup, SLALPack
+from converter.slal.SLALGroupSchema import ActorSchema, AnimationSchema
 import os
 import pathlib
 import subprocess
 
 class SLALRepairer:
 
-    def repair_slals(pack: SLALPack):
+    def repair(pack: SLALPack):
         SLALRepairer._correct_anim_directory(pack)
         SLALRepairer._correct_slal_issues(pack)
-        SLALRepairer._export_corrected_slals(pack)
+        SLALRepairer._export_corrected(pack)
 
     def _correct_anim_directory(pack:SLALPack):
-        group: SLALGroup
+        group: PackGroup
         for group in pack.groups.values():
             group.anim_dir_name = group.animation_source.anim_dir
             group.slal_json['name'] = group.animation_source.anim_dir
 
 
     def _correct_slal_issues(pack: SLALPack):
-        group: SLALGroup
+        group: PackGroup
         for group in pack.groups.values():
             slal_json = group.slal_json
 
@@ -40,8 +40,8 @@ class SLALRepairer:
                             actor['type'] = source_actor.gender
             
 
-    def _export_corrected_slals(pack: SLALPack):
-        group: SLALGroup
+    def _export_corrected(pack: SLALPack):
+        group: PackGroup
         for group in pack.groups.values():
             path = os.path.join(pack.slal_dir, group.slal_json_filename)
 

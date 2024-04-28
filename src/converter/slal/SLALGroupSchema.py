@@ -19,7 +19,7 @@ class ActorSchema(Schema):
 
 class AnimationStageSchema(Schema):
     number = fields.Number(required = True)
-    timer = fields.Float(required = True)
+    timer = fields.Float(required = False)
     sound = fields.String(required = False)
 
 class AnimationSchema(Schema):
@@ -31,6 +31,6 @@ class AnimationSchema(Schema):
     stages = fields.List(fields.Nested(AnimationStageSchema), required = False)
     creature_race = fields.String(required = False)
 
-class SLALPackSchema(Schema):
+class SLALGroupSchema(Schema):
     animations = fields.List(fields.Nested(AnimationSchema), required = True)
     name = fields.String(required = True)

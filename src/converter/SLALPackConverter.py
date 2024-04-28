@@ -1,23 +1,11 @@
-from converter.slate.SlateParser import SlateParser
 from converter.slsb.SLALExportToSLSB import SLALExportToSLSB
 from converter.Loader import Loader
 from converter.fnis.FNISBehavior import FNISBehavior
 from converter.slal.SLALPack import SLALPack
-from converter.Arguments import Arguments
 from converter.slal.SLALRepairer import SLALRepairer
-#from converter.animation.AnimationConverter import AnimationLoader
 from converter.fnis.FNISParser import FNISParser
-from converter.slsb.SLSBProject import SLSBProject
+from converter.slsb.SLSBRepairer import SLSBRepairer
 
-import os
-import pathlib
-import subprocess
-import shutil
-import json
-import argparse
-import json
-import re
-import pprint
 
 class SLALPackConverter:
 
@@ -29,15 +17,16 @@ class SLALPackConverter:
 
         pack.setup()
 
-        Loader.load_SLALs(pack)
-        Loader.load_animation_sources(pack)
+        Loader.load(pack)
             
-        SLALRepairer.repair_slals(pack)
+        SLALRepairer.repair(pack)
 
         SLALExportToSLSB.convert_to_slsb(pack)
 
         FNISParser.convert(pack)
 
-        SLSBProject.build(pack)
+        Loader.load_SLSBs(pack)
+
+        SLSBRepairer.repair(pack)
 
         FNISBehavior.build(pack)
