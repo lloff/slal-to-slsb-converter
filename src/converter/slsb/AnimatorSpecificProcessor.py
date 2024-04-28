@@ -14,21 +14,6 @@ class AnimatorSpecificProcessor:
                     sex['female'] = False
                     sex['futa'] = True
 
-
-        if 'kom_futaduo' in position['event'][0].lower():
-           sex['female'] = False
-           sex['male'] = True
-
-        if 'futafurniture01(bed)' in position['event'][0].lower():
-
-            if sex['female']:
-               sex['female'] = False
-               sex['male'] = True
-
-            if sex['male']:
-               sex['male'] = False
-               sex['female'] = True
-
         if 'ff' in tags and sex['male']:
            sex['male'] = False
            sex['futa'] = True
@@ -54,7 +39,7 @@ class AnimatorSpecificProcessor:
                         actor['female'] = False
                         actor['futa'] = True
 
-    def process_bigguy(tags: list[str], position: PositionSchema, name:str):
+    def process_scaling(tags: list[str], position: PositionSchema, name:str):
 
         pattern_bigguy = re.findall(r'(base\s?scale)\s?(\d+\.\d+)', name.lower())
         for match in pattern_bigguy:

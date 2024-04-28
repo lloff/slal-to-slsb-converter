@@ -1,9 +1,9 @@
 from converter.slate.SlateParser import SlateParser
-from converter.animation.Stage import ActorStage
+from converter.animation.Stage import ActorStage, AnimationStage
 from converter.animation.Actor import Actor
 from converter.animation.Animation import Animation
-from converter.slal.SLALPack import SLALPack
-from converter.slsb.SLSBGroupSchema import ExtraSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
+from converter.slal.SLALPack import PackGroup, SLALPack
+from converter.slsb.SLSBGroupSchema import ExtraSchema, FurnitureSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
 from converter.Keywords import Keywords
 from converter.slsb.Categories import Categories
 from converter.slsb.Tags import Tags
@@ -32,49 +32,49 @@ class TagRepairer:
 
     def append_missing_tags(tags: list[str], scene_name: str, anim_dir_name: str) -> None:
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['basescale', 'base scale', 'setscale', 'set scale', 'bigguy'], 'scaling')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['basescale', 'base scale', 'setscale', 'set scale', 'bigguy'], 'scaling')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['femdom', 'amazon', 'femaledomination', 'female domination', 'leito xcross standing'], 'femdom')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['femdom', 'amazon', 'femaledomination', 'female domination', 'leito xcross standing'], 'femdom')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['guro', 'execution'], 'gore')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['guro', 'execution'], 'gore')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, Keywords.magic, 'magic')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, Keywords.magic, 'magic')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['choke', 'choking'], 'asphyxiation')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['choke', 'choking'], 'asphyxiation')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['inv'], 'invisfurn')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['inv'], 'invisfurn')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, Keywords.furni, 'furniture')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, Keywords.furni, 'furniture')
 
         if 'invisfurn' in tags and 'furniture' in tags:
             tags.remove('furniture')
         
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['facesit'], 'facesitting')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['facesit'], 'facesitting')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['lotus'], 'lotusposition')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['lotus'], 'lotusposition')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['trib', 'tribbing'], 'tribadism')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['trib', 'tribbing'], 'tribadism')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['doggystyle', 'doggy'], 'doggy')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['doggystyle', 'doggy'], 'doggy')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['spank'], 'spanking')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['spank'], 'spanking')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['dp', 'doublepen'], 'doublepenetration')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['dp', 'doublepen'], 'doublepenetration')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['tp', 'triplepen'], 'triplepenetration')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['tp', 'triplepen'], 'triplepenetration')
         
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['lying', 'laying'], 'triplepenetration')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['lying', 'laying'], 'triplepenetration')
            
         if 'lying' in tags and 'laying' in tags and 'eggs' not in tags:
             tags.remove('laying')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['rimjob'], 'rimming')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['rimjob'], 'rimming')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['kiss'], 'kissing')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['kiss'], 'kissing')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['hold'], 'holding')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['hold'], 'holding')
 
-        Tags._if_then_add(tags, scene_name, anim_dir_name, ['69'], 'sixtynine')
+        Tags.if_then_add(tags, scene_name, anim_dir_name, ['69'], 'sixtynine')
 
         if '' in tags:
             tags.remove('')
@@ -167,7 +167,7 @@ class TagRepairer:
                     tags.remove('srvagtmp')
         
     
-    def correct_tags(tags):
+    def correct_tag_spellings(tags):
         for i, tag in enumerate(tags):
             if tag == 'cunnilingius':
                 tags[i] = 'cunnilingus'
@@ -182,22 +182,25 @@ class TagRepairer:
             if tag == 'laying' and 'eggs' not in tags:
                 tags[i] = 'lying'
     
-    def process_extra(extra: PositionExtraSchema, sex: SexSchema, categories: Categories, first: bool):
-        if categories.sub:
-            if categories.maledom and sex['female']:
-                extra['submissive'] = True
-            if categories.maledom and sex['male'] and categories.gay and first:
-                extra['submissive'] = True
-            if categories.femdom and sex['male']:
-                extra['submissive'] = True
-            if categories.femdom and sex['female'] and categories.lesbian and first:
-                extra['submissive'] = True
-            if extra['submissive'] and not categories.applied_restraint:
-                categories.applied_restraint = True
-                extra[categories.restraint] = True
+    def process_extra(sex: SexSchema, categories: Categories, tags: list[str], position: PositionSchema, first: bool) -> None:
+         extra: PositionExtraSchema = position['extra']
 
-        if categories.dead and first:
-            extra['dead'] = True
+         if categories.submissive:
+            if categories.straight and categories.female_count == 1 and 'femdom' not in tags and sex['female']:
+                extra['submissive'] = True
+            if categories.straight and categories.female_count == 2 and 'femdom' not in tags: #needs_testing
+                if sex['female']:
+                    extra['submissive'] = True
+            if categories.straight and ('femdom' in tags or 'ffffm' in tags) and sex['male']:
+                extra['submissive'] = True
+            if categories.gay and (('m2m' in tags and categories.male_count == 2 and first) or ('hcos' in tags and (position['race'] == 'Rabbit' or position['race'] == 'Skeever' or position['race'] == 'Horse'))):
+                extra['submissive'] = True
+            if categories.lesbian and first: # needs_testing
+                extra['submissive'] = True
+
+            if categories.sub_categories.unconscious is True and extra['submissive']:
+                extra['submissive'] = False
+                extra['dead'] = True
 
 
    # def process_leadin():
@@ -208,12 +211,10 @@ class TagRepairer:
         #        pos['strip_data']['gloves'] = True
 
 
-    def process_event(position: PositionSchema, pack: SLALPack):
-        event: str = position['event'][0].lower()
+    def process_event(event_name: str, position: PositionSchema, pack: SLALPack) -> None:
+        if event_name in pack.FNIS_data:
 
-        if event in pack.FNIS_data:
-
-            data = pack.FNIS_data[event]
+            data = pack.FNIS_data[event_name]
 
             position['event'][0] = os.path.splitext(data.file_name)[0]
 
@@ -224,29 +225,68 @@ class TagRepairer:
             if data.anim_obj is not None:     # The part responsible for AnimObject incorporation
                 position['anim_obj'] = ','.join(data.anim_obj)
 
-    def check_toy_tag(stage: StageSchema):
-        anim_obj_found = any(pos['anim_obj'] != "" and "cum" not in pos['anim_obj'].lower() for pos in stage['positions'])
+    def check_anim_object_found(tags: list[str], furniture: FurnitureSchema, positions: list[PositionSchema]) -> None:
+        anim_obj_found = any(pos['anim_obj'] != "" and "cum" not in pos['anim_obj'].lower() for pos in positions)
 
-        if not anim_obj_found and 'toys' in stage['tags']:
-            stage['tags'].remove('toys')
-        if anim_obj_found and 'toys' not in stage['tags']:
-            stage['tags'].append('toys')
+        if not anim_obj_found and 'toys' in tags:
+            tags.remove('toys')
+        if anim_obj_found and 'toys' not in tags:
+            tags.append('toys')   
+
+        if 'lying' in tags and not anim_obj_found:
+            furniture['allow_bed'] = True
+
+        #if 'invisfurn' in tags:
+            #    furniture['furni_types'] = allowed_furnitures['type']
+            #    do something...
+
+    def process_vampire(position: PositionSchema, event_name: str, tags: list[str]) -> None:
+        if 'vamp' in event_name and 'vampirelord' not in tags:
+                
+            if 'vampire' not in tags:
+                tags.append('vampire')
+
+            sex: SexSchema = position['sex']
+            extra: PositionExtraSchema = position['extra']
+            if Tags.if_in_tags(tags, event_name, '', ['vampirefemale', 'vampirelesbian', 'femdom', 'cowgirl', 'vampfeedf']):
+                extra['vampire'] = sex['female']
+            else:
+                extra['vampire'] = sex['male']
 
 
+    def correct_futa(sex: SexSchema, event_name: str, index: int) -> None:
+        if 'kom_futaduo' in event_name:
+            sex['female'] = False
+            sex['male'] = True
 
-    def process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema):
-        for key in animation.actors:
-            TagRepairer.process_actor(animation.actors[key], categories, position)
+        if 'futafurniture01(bed)' in event_name:
+            if index == 0:
+                sex['female'] = False
+                sex['futa'] = True
+            if index == 1:
+                sex['male'] = False
+                sex['female'] = True
 
-                        
-        for key in animation.stages:
-            stage = animation.stages[key]
+    def process_animations(pack: SLALPack, scene_name: str, categories: Categories, position: PositionSchema, extra: ExtraSchema) -> None:
+        group: PackGroup
+        for group in pack.groups.values():
+            if scene_name in group.animation_source.animations:
+                animation: Animation = group.animation_source.animations[scene_name]
+                TagRepairer._process_animation(animation, categories, position, extra)
+
+    def _process_animation(animation: Animation, categories: Categories, position: PositionSchema, extra: ExtraSchema) -> None:
+        actor: Actor
+        for actor in animation.actors.values():
+            TagRepairer.process_actor(actor, categories, position)
+
+        stage: AnimationStage                
+        for stage in animation.stages.values():
             if stage.name.startswith('Stage'):
                 if stage.timer is not None:
                     extra['fixed_len'] = round(float(stage.timer), 2)
 
 
-    def process_actor(actor: Actor, categories: Categories, position: PositionSchema):
+    def process_actor(actor: Actor, categories: Categories, position: PositionSchema) -> None:
         #if 'object' in actor.args:
             #position['anim_obj'] = actor.args['object'].replace(' ', ',')
         if 'strap_on' in actor.args:
@@ -265,22 +305,19 @@ class TagRepairer:
             position['offset']['r'] = float(actor.args['rotate'])
 
         if(len(actor.stages) > 0):
-            for actor_stage_key in actor.stages:
-                if actor_stage_key.startswith('Stage'):
-                    stage: ActorStage = actor.stages[actor_stage_key]
-
-                    if stage.strap_on is not False:
-                        categories.has_strap_on = True
-                    if stage.sos is not None:
-                        categories.has_sos_value = True
-                    if stage.forward is not None:
-                        position['offset']['x'] = stage.forward
-                    if stage.side is not None:
-                        position['offset']['y'] = stage.side
-                    if stage.up is not None:
-                        position['offset']['z'] = stage.up
-                    if stage.rotate is not None:
-                        position['offset']['r'] = stage.rotate
+            for stage in actor.stages.values():
+                if stage.strap_on is not False:
+                    categories.has_strap_on = True
+                if stage.sos is not None:
+                    categories.has_sos_value = True
+                if stage.forward is not None:
+                    position['offset']['x'] = stage.forward
+                if stage.side is not None:
+                    position['offset']['y'] = stage.side
+                if stage.up is not None:
+                    position['offset']['z'] = stage.up
+                if stage.rotate is not None:
+                    position['offset']['r'] = stage.rotate
           
                 
                 

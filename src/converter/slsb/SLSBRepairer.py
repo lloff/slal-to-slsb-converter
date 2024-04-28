@@ -2,13 +2,15 @@ from converter.slsb.Categories import Categories
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
 from converter.animation.Animation import Animation
 from converter.slal.SLALPack import PackGroup, SLALPack
-from converter.slsb.SLSBGroupSchema import PositionExtraSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
+from converter.slsb.SLSBGroupSchema import FurnitureSchema, PositionExtraSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
 from converter.Arguments import Arguments
 from converter.slsb.TagRepairer import TagRepairer
 import subprocess
 import shutil
 import json
 import os
+
+from converter.slsb.Tags import Tags
 
 class SLSBRepairer:
     def repair(pack: SLALPack):
@@ -38,68 +40,58 @@ class SLSBRepairer:
 
         scenes: dict[str, SceneSchema] = group.slsb_json['scenes']
 
+        scene: SceneSchema
         for scene in scenes.values():
             stages = scene['stages']
-            scene_name = scene['name']
+
+            stage: StageSchema
             for stage in stages:
-                SLSBRepairer.process_stage(stage, scene_name, pack, group)
+                SLSBRepairer._process_stage(stage, scene['name'], pack, group, scene['furniture'])
 
 
-    def process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup) -> None:
+    def _process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup, furniture: FurnitureSchema) -> None:
             
-            tags = [tag.lower().strip() for tag in stage['tags']]
+            tags: list[str] = [tag.lower().strip() for tag in stage['tags']]
 
             TagRepairer.remove_slate_tags(pack, tags, scene_name)
             TagRepairer.append_missing_tags(tags, scene_name, group.anim_dir_name)
             TagRepairer.append_missing_slate_tags(tags, pack, stage['id'])
-            TagRepairer.correct_tags(tags)
-            TagRepairer.check_toy_tag(stage)
+            TagRepairer.correct_tag_spellings(tags)
 
             categories: Categories = Categories.get_categories(tags)  
-                    
-            positions = stage['positions'] 
-
-            seen_male = False
-            seen_female = False
-
-            for pos in positions:
-                sex: SexSchema = pos['sex']
-                if sex['male']:
-                    seen_male = True
-                if sex['female']:
-                    seen_female = True
-
-            categories.gay = seen_male and not seen_female
-            categories.lesbian = seen_female and not seen_male
-
-            categories.applied_restraint = categories.restraint == ''
 
             categories.update_sub_categories(tags, scene_name, group.anim_dir_name)
+                    
+            positions: list[PositionSchema] = stage['positions']
 
             for i, position in enumerate(positions):
                 SLSBRepairer._process_position(position, tags, categories, pack, scene_name, stage, i == 0)
+
+            TagRepairer.check_anim_object_found(stage, furniture, positions)
         
             stage['tags'] = tags
 
-    def _process_position(position: PositionSchema, tags: list[str], categories: Categories, pack: SLALPack, scene_name: str, stage: StageSchema, first: bool):
+    def _process_position(position: PositionSchema, tags: list[str], categories: Categories, pack: SLALPack, scene_name: str, stage: StageSchema, key: int):
         sex: SexSchema = position['sex']
 
-        position_extra: PositionExtraSchema = position['extra']
-
-        TagRepairer.process_extra(position_extra, sex, categories, first)
+        TagRepairer.process_extra(position, sex, categories, tags, key == 0)
 
         if position['event'] and len(position['event']) > 0:
-            TagRepairer.process_event(position, pack)
+            first_event_name = position['event'][0].lower()
 
-        group: PackGroup
-        for group in pack.groups.values():
-            if scene_name in group.animation_source.animations:
-                animation: Animation = group.animation_source.animations[scene_name]
-                TagRepairer.process_animation(animation, categories, position, stage['extra'])
-            
-        if 'futa' in tags or 'futanari' in tags or 'futaxfemale' in tags:
+            TagRepairer.process_event(first_event_name, position, pack)
+            TagRepairer.correct_futa(first_event_name, sex, key)
+
+            if all(position['race'] != "Vampire Lord" for position in stage['positions']):
+                TagRepairer.process_vampire(position, first_event_name, tags)
+
+        TagRepairer.process_animations(pack, categories, position, stage['extra'])
+
+        if categories.futa:
             AnimatorSpecificProcessor.process_futanari(tags, position, categories, stage['positions'])
 
-        if 'bigguy' in tags or 'scaling' in tags:
-            AnimatorSpecificProcessor.process_bigguy(tags, position, scene_name)
+        if categories.scaling:
+            AnimatorSpecificProcessor.process_scaling(tags, position, scene_name)
+
+        categories.update_orientation(sex)
             

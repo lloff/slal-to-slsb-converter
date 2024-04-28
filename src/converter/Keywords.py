@@ -1,18 +1,19 @@
 
 class Keywords:
     femdom: list[str] = ['lesbian', 'femdom', 'ff', 'fff', 'ffff', 'fffff']
-    futa: list[str] = ['futa']
+    futa: list[str] = ['futa', 'futanari', 'futaxfemale']
     sub: list[str] = ['forced', 'rape', 'aggressive', 'aggressivedefault', 'bound', 'femdom', 'maledom', 'lezdom', 'gaydom', 'defeated', 'domsub', 'bdsm']
     dead: list[str] = ['dead', 'necro', 'guro']
     restraints: dict[str, str] = {'armbinder': 'armbinder', 'yoke': 'yoke', 'cuffs': 'handshackles', 'restraints': 'armbinder', 'frontcuffs': 'handshackles'}
-
     dominant: list[str] = ['rough', 'bound', 'dominant', 'defeated', 'conquering', 'humiliation', 'domsub', 'femdom', 'femaledomination', 'maledom', 'lezdom', 'gaydom', 'bdsm']
-    uses_only_agg_tag = ['leito', 'kom', 'flufyfox', 'gs', 'cobalt', 'mastermike', 'nya', 'rydin', 'nibbles', 'anubs']
     unconscious: list[str] = ['necro', 'guro', 'gore', 'dead']
     futa: list[str] = ['futa', 'futanari', 'futaxfemale']
     leadin_: list[str] = ['kissing', 'hugging', 'holding', 'loving', 'foreplay', 'lying', 'kneeling', 'cuddle', 'sfw', 'romance']
     not_leadin: list[str] = ['vaginal', 'anal', 'oral', 'blowjob', 'cunnilingus', 'forced', 'sex', 'masturbation']
     magic: list[str] = ['mage', 'staff', 'alteration', 'rune', 'magicdildo', 'magick']
+    forced: list[str] = ['forced', 'rape', 'fbrape', 'force', 'rough', 'aggressive']
+
+ ##  uses_only_agg_tag = ['leito', 'kom', 'flufyfox', 'gs', 'cobalt', 'mastermike', 'nya', 'rydin', 'nibbles', 'anubs']
     furni: list[str] = [
         'alchemywb', 'bed', 'bench', 'cage', 'chair', 'coffin', 'counter', 'couch', 'desk',
         'doublebed', 'doublebeds', 'drawer', 'dwemerchair', 'enchantingwb', 'furn', 'furotub',
