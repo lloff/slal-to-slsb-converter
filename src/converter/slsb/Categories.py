@@ -61,10 +61,7 @@ class Categories:
         self.sub_categories.spanking = 'spanking' in tags
         self.sub_categories.dominant = Tags.if_in_tags(tags, Keywords.dominant, scene_name, anim_dir_name)
         
-        self.sub_categories.forced = Tags.if_in_tags(tags, Keywords.forced, scene_name, anim_dir_name)
-        ## Note: for forced, I removed the check for 'Keywords.uses_only_agg_tag' because is there ever going to be a use of the 'aggressive' tag without it being forced?
-        ## NOTE: Some animators do distinguish between the two when they use both aggressive and forced. But the animators mentioned in this list don't use the forced tag at all
-        ## so that's why we assume that aggressive for them is forced while for others aggressive can indicate DD stuff too for example (which falls in dominant subcategory)
+        self.sub_categories.forced = Tags.if_in_tags(tags, Keywords.forced, scene_name, anim_dir_name) or ('aggressive' in tags and Tags.if_in_tags(tags, Keywords.uses_only_agg_tag))
 
         if self.submissive is not True:
             self.submissive = self.sub_categories.submissive()

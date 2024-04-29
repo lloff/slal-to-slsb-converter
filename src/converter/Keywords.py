@@ -2,12 +2,14 @@
 class Keywords:
     dominant: list[str] = ['rough', 'bound', 'dominant', 'defeated', 'conquering', 'humiliation', 'domsub', 'femdom', 'femaledomination', 'maledom', 'lezdom', 'gaydom', 'bdsm']
     uses_only_agg_tag: list[str] = ['leito', 'kom', 'flufyfox', 'gs', 'cobalt', 'mastermike', 'nya', 'rydin', 'nibbles', 'anubs']
-    forced: list[str] = ['forced', 'rape', 'fbrape', 'force', 'rough', 'aggressive']
+    forced: list[str] = ['forced', 'rape', 'fbrape', 'force', 'rough']
     unconscious: list[str] = ['necro', 'guro', 'gore', 'dead']
     futa: list[str] = ['futa', 'futanari', 'futaxfemale']
     leadin_: list[str] = ['kissing', 'hugging', 'holding', 'loving', 'foreplay', 'lying', 'kneeling', 'cuddle', 'sfw', 'romance']
     not_leadin: list[str] = ['vaginal', 'anal', 'oral', 'blowjob', 'cunnilingus', 'forced', 'sex', 'masturbation']
     magic: list[str] = ['mage', 'staff', 'alteration', 'rune', 'magicdildo', 'magick']
+
+    uses_only_agg_tag = ['leito', 'kom', 'flufyfox', 'gs', 'cobalt', 'mastermike', 'nya', 'rydin', 'nibbles', 'anubs']
 
     furniture: list[str] = [
         'alchemywb', 'bed', 'bench', 'cage', 'chair', 'coffin', 'counter', 'couch', 'desk',
