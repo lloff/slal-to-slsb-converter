@@ -7,12 +7,13 @@ from converter.slsb.SLSBGroupSchema import ExtraSchema, FurnitureSchema, Positio
 from converter.Keywords import Keywords
 from converter.slsb.Categories import Categories
 from converter.slsb.Tags import Tags
+from converter.Arguments import Arguments
 import os
 import shutil
 
 class TagRepairer:
 
-    def remove_slate_tags(pack: SLALPack, tags: list[str], stage_name):
+    def insert_slate_tags(pack: SLALPack, tags: list[str], stage_name):
         slate_action_logs = SlateParser.parse(pack)
 
         if slate_action_logs is not None:
@@ -80,7 +81,7 @@ class TagRepairer:
             tags.remove('')
                 
 
-    def append_missing_slate_tags(tags: list[str], pack: SLALPack, stage_num: int):
+    def incorporate_stage_tags(tags: list[str], pack: SLALPack, stage_num: int):
         slate_action_logs = SlateParser.parse(pack)
 
         if(slate_action_logs is not None):
@@ -221,9 +222,10 @@ class TagRepairer:
 
             os.makedirs(os.path.dirname(os.path.join(pack.out_dir, data.out_path)), exist_ok=True)
             
-            shutil.copyfile(data.path, os.path.join(pack.out_dir, data.out_path))
+            if Arguments.skyrim_path:
+                shutil.copyfile(data.path, os.path.join(pack.out_dir, data.out_path))
 
-            if data.anim_obj is not None:     # The part responsible for AnimObject incorporation
+            if data.anim_obj is not None: #anim_object incorporation
                 position['anim_obj'] = ','.join(data.anim_obj)
 
     def check_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema) -> None:
@@ -235,6 +237,8 @@ class TagRepairer:
 
         if 'lying' in tags and not categories.anim_object_found:
             furniture['allow_bed'] = True
+            #NOTE: I might need access to "has_warnings" from "SceneSchema" (might resolve the no prompt issues ig); SLSB really needs some documentation lol
+            #don't know if that means the function needs to be modified too; do your thing and i will learn from it
 
         #if 'invisfurn' in tags:
             #    furniture['furni_types'] = allowed_furnitures['type']

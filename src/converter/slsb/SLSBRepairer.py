@@ -36,9 +36,9 @@ class SLSBRepairer:
             
             tags: list[str] = [tag.lower().strip() for tag in stage['tags']]
 
-            TagRepairer.remove_slate_tags(pack, tags, scene_name)
+            TagRepairer.insert_slate_tags(pack, tags, scene_name)
             TagRepairer.append_missing_tags(tags, scene_name, anim_dir)
-            TagRepairer.append_missing_slate_tags(tags, pack, stage['id'])
+            TagRepairer.incorporate_stage_tags(tags, pack, stage['id'])
             TagRepairer.correct_tag_spellings(tags)
 
             categories: Categories = Categories.get_categories(tags)  

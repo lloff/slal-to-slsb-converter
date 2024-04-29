@@ -72,8 +72,8 @@ class FNISBehavior:
 
       ## TODO:
        ## if " " in pack.anim_dir_name:
-       #     print("")
        #    print(f'WARNING: FNIS could not generate HKX for {list_name}; use HKXCONV to manually convert the temporarily generated xml to hkx (xml generated into Data/tools/GenerateFNIS_for_Modders/temporary_logs/)')
+       #     print("")
 
         if Arguments.remove_anims:
             for filename in os.listdir(parent_dir):
@@ -81,6 +81,10 @@ class FNISBehavior:
                     os.remove(os.path.join(parent_dir, filename))
                         
     def edit_output_fnis(file_path, filename, pack):
+        ## NOTE: we should also explore the output fnis a bit more. i would like to for example edit some options in here based on the hkx file name present
+        ## so for example, just the way we keep track of animobjects, we should be able to keep track of rest of options too (including "-a", "-md" and the timed event / sfx related data that can be part of fnis list at tiems)
+        ## the problem i faced was that the animobject incoporation happens thru json and i cant write code if i havent seen it before in some way lol
+
         full_path = os.path.join(file_path, filename)
         modified_lines = []
         with open(full_path, 'r') as file:

@@ -10,6 +10,10 @@ class SlateParser:
         ## TODO - at the moment this code must only load at the base slate_path
         ## Was it intended? Was it intended to look in the individual pack url instead?
 
+        ## NOTE - umm SLATE action logs are supposed to be in a separate path, that was the intention basically.
+        ## all json from the arg.slate_path should load (if you wanna add support for subdirectories then go ahead; never thought that was needed tho)
+        ## also u can remove these comments from me later lol xD
+
         slate_logs: list[SlateActionLog] = []
 
         if Arguments.slate_path is not None:

@@ -23,15 +23,17 @@ class SLALPack:
 
         print(f"{self.toString()} | Found")
         
-
+    
     def validate(self):
         if not os.path.exists(self.slal_dir):
             return False
-        if not os.path.exists(self.anim_source_dir): ## TODO: Should this check be here? Or can this sometimes not exist?
-            return False
+        #if not os.path.exists(self.anim_source_dir): ## TODO: Should this check be here? Or can this sometimes not exist?
+        #    return False
         if not os.path.exists(self.actor_dir):
             return False
         return True
+    
+    ##NOTE: Yes, the source text can be missing at times (komotor, 3j, and some other have it missing iirc; also the manual conversions for zaz/ddng too)
 
     def setup(self):
         os.makedirs(self.out_dir + '/SKSE/Sexlab/Registry/Source')

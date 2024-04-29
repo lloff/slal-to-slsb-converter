@@ -18,6 +18,7 @@ class SLALRepairer:
         for group in pack.groups.values():
             if group.animation_source:
                 group.slal_json['name'] = group.animation_source.anim_dir
+            #NOTE: There was a fallback fix for correcting the name field in json based on directory name too if source file not found / or anim_dir missing
 
 
     def _correct_slal_issues(pack: SLALPack):

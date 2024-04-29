@@ -1,6 +1,10 @@
 from converter.animation.Stage import ActorStage
 import re
 
+## NOTE: this still relying on older script. we only need the gender info for instances when the json has "type" as gender for an actor
+## in those instances only is the source file of any use anymore; see original.py ("SOURCE TXT PARSER" section)
+## for the rest of the data, we instead rely on SLAL jsons now which is always present (see "SLAL JSON PARSER" section)
+## this applies to all the stuff in animation folder i think, sowwy :)
 
 class Actor:
     def __init__(self, number, scene_name):
