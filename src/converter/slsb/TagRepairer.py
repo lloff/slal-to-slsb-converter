@@ -11,9 +11,16 @@ import os
 import shutil
 
 class TagRepairer:
+    _pack: SLALPack
+    _group: PackGroup
+    _stage: StageSchema
+    _tags: list[str]
 
-    def remove_slate_tags(pack: SLALPack, tags: list[str], stage_name):
-        slate_action_logs = SlateParser.parse(pack)
+    def __init__(self, pack: SLALPack):
+        self._pack = pack
+
+    def remove_slate_tags(self, tags: list[str], stage_name):
+        slate_action_logs = SlateParser.parse(self._pack)
 
         if slate_action_logs is not None:
             TagToAdd = ''
@@ -80,8 +87,8 @@ class TagRepairer:
             tags.remove('')
                 
 
-    def append_missing_slate_tags(tags: list[str], pack: SLALPack, stage_num: int):
-        slate_action_logs = SlateParser.parse(pack)
+    def append_missing_slate_tags(self, tags: list[str], stage_num: int):
+        slate_action_logs = SlateParser.parse(self._pack)
 
         if(slate_action_logs is not None):
             asl_en = str(stage_num) + "en"  # end_stage
@@ -226,7 +233,7 @@ class TagRepairer:
             if data.anim_obj is not None:     # The part responsible for AnimObject incorporation
                 position['anim_obj'] = ','.join(data.anim_obj)
 
-    def check_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema) -> None:
+    def process_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema) -> None:
 
         if not categories.anim_object_found and 'toys' in tags:
             tags.remove('toys')

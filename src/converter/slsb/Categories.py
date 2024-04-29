@@ -1,5 +1,5 @@
 from converter.Keywords import Keywords
-from converter.slsb.SLSBGroupSchema import SexSchema
+from converter.slsb.SLSBGroupSchema import PositionSchema, SexSchema
 from converter.slsb.Tags import Tags
 
 class SubCategories:
@@ -48,32 +48,33 @@ class Categories:
     has_up = []
     has_rotate = []
 
-    def get_categories(tags: list[str]) -> "Categories":
-        categories = Categories()
+    def __init__(self, tags: list[str], scene_name: str, anim_dir_name: str):
+        self._set_categories(tags)
+        self._set_sub_categories(tags, scene_name, anim_dir_name)
 
-        categories.submissive = Tags.if_keywords_in_tags(tags, Keywords.sub) or Tags.if_keywords_in_tags(tags, Keywords.restraints)
-        categories.maledom = Tags.if_keywords_in_tags(tags, Keywords.sub) or Tags.if_keywords_in_tags(tags, Keywords.restraints)
+
+    def _set_categories(self, tags: list[str]) -> None:
+        self.submissive = Tags.if_keywords_in_tags(tags, Keywords.sub) or Tags.if_keywords_in_tags(tags, Keywords.restraints)
+        self.maledom = Tags.if_keywords_in_tags(tags, Keywords.sub) or Tags.if_keywords_in_tags(tags, Keywords.restraints)
 
         try:
-            categories.restraint = Tags.get_keyword_in_tags(tags, Keywords.restraints)
+            self.restraint = Tags.get_keyword_in_tags(tags, Keywords.restraints)
         except StopIteration:
-            categories.restraint = None
+            self.restraint = None
 
-        categories.maybe_femdom = Tags.if_keywords_in_tags(tags, Keywords.femdom)
-        categories.dead = Tags.if_keywords_in_tags(tags, Keywords.dead)
+        self.maybe_femdom = Tags.if_keywords_in_tags(tags, Keywords.femdom)
+        self.dead = Tags.if_keywords_in_tags(tags, Keywords.dead)
 
-        categories.leadin = 'leadin' in tags
-        categories.scaling = 'scaling' in tags
+        self.leadin = 'leadin' in tags
+        self.scaling = 'scaling' in tags
             
-        if categories.submissive and categories.maybe_femdom:
-            categories.maledom = False
-            categories.femdom = True
+        if self.submissive and self.maybe_femdom:
+            self.maledom = False
+            self.femdom = True
 
-        categories.futa = Tags.if_keywords_in_tags(tags, Keywords.futa)
+        self.futa = Tags.if_keywords_in_tags(tags, Keywords.futa)
 
-        return categories
-
-    def update_sub_categories(self, tags: list[str], scene_name: str, anim_dir_name: str) -> None:     
+    def _set_sub_categories(self, tags: list[str], scene_name: str, anim_dir_name: str) -> None:     
         self.sub_categories.asphyxiation = 'asphyxiation' in tags
         self.sub_categories.spanking = 'spanking' in tags
         self.sub_categories.gore = 'gore' in tags
@@ -90,6 +91,9 @@ class Categories:
             self.submissive = self.sub_categories.submissive()
 
         tags + self.sub_categories.get_true()
+
+    def check_anim_object_found(self, positions: list[PositionSchema]):
+        self.anim_object_found = any(pos['anim_obj'] != "" and "cum" not in pos['anim_obj'].lower() for pos in positions)
 
     def update_orientation(self, sex: SexSchema):
        

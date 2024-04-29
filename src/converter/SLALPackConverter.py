@@ -10,7 +10,7 @@ from converter.slsb.SLSBRepairer import SLSBRepairer
 class SLALPackConverter:
 
     def start(dir):
-        pack = SLALPack(dir);
+        pack = SLALPack(dir)
         if not pack.validate():
             print(f"Pack {pack.toString()} | failed validation")
             return;
@@ -27,7 +27,7 @@ class SLALPackConverter:
 
         Loader.load_SLSBs(pack)
 
-        SLSBRepairer.repair(pack)
+        SLSBRepairer().repair(pack)
 
         Exporter.export_corrected_slsbs(pack)
 

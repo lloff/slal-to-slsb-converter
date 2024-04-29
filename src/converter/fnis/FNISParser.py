@@ -5,7 +5,7 @@ import os
 
 class FNISParser:
             
-    def convert(pack: SLALPack):
+    def convert(pack: SLALPack) -> None:
         print(f"{pack.toString()} | Parsing FNIS animation stages")
         for filename in os.listdir(pack.actor_dir):
             path = os.path.join(pack.actor_dir, filename)
