@@ -247,7 +247,7 @@ class TagRepairer:
 
             sex: SexSchema = position['sex']
             extra: PositionExtraSchema = position['extra']
-            if Tags.if_in_tags(tags, ['vampirefemale', 'vampirelesbian', 'femdom', 'cowgirl', 'vampfeedf'], event_name):
+            if Tags.if_any_in_tags(tags, ['vampirefemale', 'vampirelesbian', 'femdom', 'cowgirl', 'vampfeedf'], event_name):
                 extra['vampire'] = sex['female']
             else:
                 extra['vampire'] = sex['male']

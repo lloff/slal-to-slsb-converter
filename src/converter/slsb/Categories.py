@@ -45,23 +45,23 @@ class Categories:
     def get_categories(tags: list[str]) -> "Categories":
         categories = Categories()
 
-        categories.futa = Tags.if_keywords_in_tags(tags, Keywords.futa)
+        categories.futa = Tags.if_any_in_tags(tags, Keywords.futa)
         categories.scaling = 'scaling' in tags
         #categories.leadin = 'leadin' in tags
 
         return categories
 
     def update_sub_categories(self, tags: list[str], scene_name: str, anim_dir_name: str) -> None:  
-        self.sub_categories.unconscious = Tags.if_in_tags(tags, Keywords.unconscious, scene_name, anim_dir_name) 
+        self.sub_categories.unconscious = Tags.if_any_in_tags(tags, Keywords.unconscious, scene_name, anim_dir_name) 
         self.sub_categories.gore = 'gore' in tags
-        self.sub_categories.amputee = Tags.if_in_tags(tags, ['amputee'], scene_name, anim_dir_name)
-        self.sub_categories.ryona = Tags.if_in_tags(tags, ['nya', 'psycheslavepunishment'], scene_name, anim_dir_name)
-        self.sub_categories.humiliation = Tags.if_in_tags(tags, ['humiliation', 'punishment'], scene_name, anim_dir_name)
+        self.sub_categories.amputee = Tags.if_any_in_tags(tags, ['amputee'], scene_name, anim_dir_name)
+        self.sub_categories.ryona = Tags.if_any_in_tags(tags, ['nya', 'psycheslavepunishment'], scene_name, anim_dir_name)
+        self.sub_categories.humiliation = Tags.if_any_in_tags(tags, ['humiliation', 'punishment'], scene_name, anim_dir_name)
         self.sub_categories.asphyxiation = 'asphyxiation' in tags
         self.sub_categories.spanking = 'spanking' in tags
-        self.sub_categories.dominant = Tags.if_in_tags(tags, Keywords.dominant, scene_name, anim_dir_name)
+        self.sub_categories.dominant = Tags.if_any_in_tags(tags, Keywords.dominant, scene_name, anim_dir_name)
         
-        self.sub_categories.forced = Tags.if_in_tags(tags, Keywords.forced, scene_name, anim_dir_name) or ('aggressive' in tags and Tags.if_in_tags(tags, Keywords.uses_only_agg_tag))
+        self.sub_categories.forced = Tags.if_any_in_tags(tags, Keywords.forced, scene_name, anim_dir_name) or ('aggressive' in tags and Tags.if_any_in_tags(tags, Keywords.uses_only_agg_tag))
 
         if self.submissive is not True:
             self.submissive = self.sub_categories.submissive()
