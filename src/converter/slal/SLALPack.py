@@ -13,7 +13,6 @@ class SLALPack:
         self.name = dir
         self.working_dir = os.path.join(Arguments.parent_dir, dir)
         self.slal_dir = self.working_dir + "\\SLAnims\\json"
-        self.anim_source_dir = self.working_dir + "\\SLAnims\\source"
         
         self.out_dir = Arguments.parent_dir + "\\conversion\\" + dir.replace(" ", '')
 
@@ -23,19 +22,20 @@ class SLALPack:
 
         self.groups: dict[str, PackGroup] = dict()
 
-        logging.getLogger().log(f"{self.toString()} | Found")
+        self.anim_source_dir = self.working_dir + "\\SLAnims\\source"
+        self.no_anim_source = False
+
+        logging.getLogger().info(f"{self.toString()} | Found")
         
     
     def validate(self):
         if not os.path.exists(self.slal_dir):
             return False
-        #if not os.path.exists(self.anim_source_dir): ## TODO: Should this check be here? Or can this sometimes not exist?
-        #    return False
+        if not os.path.exists(self.anim_source_dir):
+            self.no_anim_source = True
         if not os.path.exists(self.actor_dir):
             return False
         return True
-    
-    ##NOTE: Yes, the source text can be missing at times (komotor, 3j, and some other have it missing iirc; also the manual conversions for zaz/ddng too)
 
     def setup(self):
         os.makedirs(self.out_dir + '/SKSE/Sexlab/Registry/Source')

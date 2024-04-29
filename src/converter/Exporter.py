@@ -10,7 +10,7 @@ import json
 class Exporter:
 
     def convert_slal_to_slsb(pack: SLALPack) -> None:
-      logging.getLogger().info(f"{pack.toString()} | Exporting SLAL json to SLSB...")
+        logging.getLogger().debug(f"{pack.toString()} | Exporting SLAL json to SLSB...")
 
         group: PackGroup
         for group in pack.groups.values():
@@ -19,11 +19,11 @@ class Exporter:
             if os.path.isfile(path):
                 proc = subprocess.Popen(f"{Arguments.slsb_path} convert --in \"{path}\" --out \"{Arguments.temp_dir}\"", stdout=subprocess.PIPE)
                 for line in proc.stdout:
-                  logging.getLogger().debug(f"{pack.toString()} | " + line)
+                  logging.getLogger().debug(f"{pack.toString()} | {line}" )
                 proc.wait()
 
     def export_corrected_slsbs(pack: SLALPack) -> None:
-        logging.getLogger().info(f"{pack.toString()} | Exporting Corrected SLSBs...")
+        logging.getLogger().debug(f"{pack.toString()} | Exporting Corrected SLSBs...")
 
         group: PackGroup
         for group in pack.groups.values():

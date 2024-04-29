@@ -34,4 +34,4 @@ class SLALPackConverter:
 
         FNISBehavior.build(pack)
 
-        logging.getLogger().log(f"Pack {pack.toString()} | Done")
+        logging.getLogger().info(f"Pack {pack.toString()} | Done")

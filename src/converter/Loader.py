@@ -31,7 +31,7 @@ class Loader:
 
                 pack.groups[group.name] = group
 
-        logging.getLogger().info(f"{pack.toString()} | {len(pack.groups)} Groups Found")
+        logging.getLogger().debug(f"{pack.toString()} | {len(pack.groups)} Groups Found")
 
 
     def _load_SLALs(pack: SLALPack) -> None:
@@ -45,7 +45,7 @@ class Loader:
                     js = json.load(file)
 
             except:
-                logging.getLogger().error(sys.exc_info())
+                logging.getLogger().exception(f"{pack.toString()} | {group.slal_json_filename} SLSB JSON Load error")
                 exit(1)
 
             schema = SLALGroupSchema()
@@ -53,13 +53,17 @@ class Loader:
             try:
                 group.slal_json = schema.load(js)
             except ValidationError as err:
-                logging.getLogger().error(err.messages)
+                logging.getLogger().exception(f"{pack.toString()} | JSON Schema Error: {err.messages}")
                 exit(1)
 
 
 
     def _load_animation_sources(pack: SLALPack) -> None:
-        logging.getLogger().info(f"{pack.toString()} | Loading animation source files")
+        if pack.no_anim_source:
+            logging.getLogger().warning(f"{pack.toString()} | WARNING: Animation source files do not exist")
+            return
+
+        logging.getLogger().debug(f"{pack.toString()} | Loading animation source files")
         
         files: list[str] = os.listdir(pack.anim_source_dir)
 
@@ -99,7 +103,7 @@ class Loader:
                     js = json.load(file)
 
             except:
-                logging.getLogger().error(sys.exc_info())
+                logging.getLogger().exception(f"{pack.toString()} | {group.slal_json_filename} SLSB JSON Load error")
                 exit(1)
 
            
@@ -108,4 +112,4 @@ class Loader:
             try:
                 group.slsb_json: SLSBGroupchema = schema.load(js)
             except ValidationError as err:
-                logging.getLogger().error(err.messages)
+                logging.getLogger().exception(f"{pack.toString()} | JSON Schema Error: {err.messages}")

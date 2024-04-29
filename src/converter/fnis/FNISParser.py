@@ -14,7 +14,7 @@ class FNISParser:
             if os.path.isdir(path):
                 FNISIterate.iterate_folders(path, pack, FNISParser.parse_fnis_list)
 
-        logging.getLogger().info(f"{pack.toString()} | {len(pack.FNIS_data)} FNIS animation stages parsed") 
+        logging.getLogger().debug(f"{pack.toString()} | {len(pack.FNIS_data)} FNIS animation stages parsed") 
 
 
     def parse_fnis_list(parent_dir, file, pack: SLALPack):

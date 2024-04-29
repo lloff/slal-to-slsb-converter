@@ -21,7 +21,7 @@ class FNISBehavior:
 
     def build_behavior(parent_dir, filename, pack: SLALPack):
 
-        logging.getLogger().info(f"{pack.toString()} | Building {filename}")
+        logging.getLogger().debug(f"{pack.toString()} | Building {filename}")
 
         if '_canine' in filename.lower():
             return

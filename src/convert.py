@@ -4,7 +4,7 @@ import time
 
 start = time.time()
 
-logging.getLogger().setLevel(logging.WARNING)
+logging.getLogger().setLevel(logging.INFO)
 
 Go.parse_arguments()
 
@@ -16,4 +16,4 @@ Go.clean()
 
 total_time = time.time() - start
 
-logging.getLogger().log(f"Time Taken: {round(total_time)}")
+logging.getLogger().info(f"Time Taken: {round(total_time)}")

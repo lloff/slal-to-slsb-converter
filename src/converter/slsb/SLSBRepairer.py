@@ -31,6 +31,7 @@ class SLSBRepairer:
 
     def _process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup, furniture: FurnitureSchema) -> None:
             
+            ##TODO: by here, anim_dir should be group.slal_json['name'], and that one works for animations or not
             anim_dir = ''
             if (group.animation_source is not None):
                 anim_dir = group.animation_source.anim_dir
