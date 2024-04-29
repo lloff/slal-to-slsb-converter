@@ -6,6 +6,8 @@ import re
 ## for the rest of the data, we instead rely on SLAL jsons now which is always present (see "SLAL JSON PARSER" section)
 ## this applies to all the stuff in animation folder i think, sowwy :)
 
+##t hat's fine - I'll keep this parser anyway just in case it becomes more useful again.
+
 class Actor:
     def __init__(self, number, scene_name):
         self.scene_name = scene_name
@@ -21,9 +23,6 @@ class Actor:
     def get_name(self):
         return f"a{self.number}"
         
-    def add_stage_line(self, line):
-        self.unparsed_stage_lines.append(line)
-
     def parse_line(self, line):
         if actor_match:= re.search(r'actor\s*(\d+)\s*=\s*([^()]+)\(([^)]*)\)', line):
 

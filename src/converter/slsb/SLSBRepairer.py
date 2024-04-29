@@ -30,14 +30,14 @@ class SLSBRepairer:
 
             stage: StageSchema
             for stage in stages:
-                SLSBRepairer._process_stage(stage, scene['name'], pack, group, scene['furniture'])
+                SLSBRepairer._process_stage(stage, scene['name'], pack, group, scene['furniture'], scene['has_warnings'])
 
         total_time = time.time() - SLSBRepairer.start
 
         logging.getLogger().debug(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json Took: {round(total_time)}s")
 
 
-    def _process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup, furniture: FurnitureSchema) -> None:
+    def _process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup, furniture: FurnitureSchema, has_warnings: bool) -> None:
             group_name = group.slal_json['name']
             
             tags: list[str] = [tag.lower().strip() for tag in stage['tags']]
@@ -60,7 +60,7 @@ class SLSBRepairer:
 
             categories.anim_object_found = any(pos['anim_obj'] != "" and "cum" not in pos['anim_obj'].lower() for pos in positions)
 
-            TagRepairer.check_anim_object_found(tags, categories, furniture)
+            TagRepairer.check_anim_object_found(tags, categories, furniture, has_warnings)
         
             stage['tags'] = tags
 

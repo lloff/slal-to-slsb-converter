@@ -3,7 +3,7 @@ from converter.animation.Stage import ActorStage, AnimationStage
 from converter.animation.Actor import Actor
 from converter.animation.Animation import Animation
 from converter.slal.SLALPack import PackGroup, SLALPack
-from converter.slsb.SLSBGroupSchema import ExtraSchema, FurnitureSchema, PositionExtraSchema, PositionSchema, SexSchema, StageSchema
+from converter.slsb.SLSBGroupSchema import ExtraSchema, FurnitureSchema, PositionExtraSchema, PositionSchema, SceneSchema, SexSchema, StageSchema
 from converter.Keywords import Keywords
 from converter.slsb.Categories import Categories
 from converter.slsb.Tags import Tags
@@ -163,7 +163,7 @@ class TagRepairer:
                     tags.remove('srvagtmp')
         
     
-    def correct_tag_spellings(tags):
+    def correct_tag_spellings(tags) -> None:
         for i, tag in enumerate(tags):
             if tag == 'cunnilingius':
                 tags[i] = 'cunnilingus'
@@ -223,7 +223,7 @@ class TagRepairer:
             if data.anim_obj is not None: #anim_object incorporation
                 position['anim_obj'] = ','.join(data.anim_obj)
 
-    def check_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema) -> None:
+    def check_anim_object_found(tags: list[str], categories: Categories, furniture: FurnitureSchema, has_warnings: bool) -> None:
 
         if not categories.anim_object_found and 'toys' in tags:
             tags.remove('toys')
@@ -234,6 +234,7 @@ class TagRepairer:
             furniture['allow_bed'] = True
             #NOTE: I might need access to "has_warnings" from "SceneSchema" (might resolve the no prompt issues ig); SLSB really needs some documentation lol
             #don't know if that means the function needs to be modified too; do your thing and i will learn from it
+            # I'll just pass it through to you here for now - use it as you need
 
         #if 'invisfurn' in tags:
             #    furniture['furni_types'] = allowed_furnitures['type']
