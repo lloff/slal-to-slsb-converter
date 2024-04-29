@@ -10,7 +10,7 @@ class SLALRepairer:
 
     def repair(pack: SLALPack):
         SLALRepairer._correct_anim_directory(pack)
-        SLALRepairer._correct_slal_issues(pack)
+        SLALRepairer._correct_slal_gender_from_animation_source(pack)
         SLALRepairer._export_corrected(pack)
 
     def _correct_anim_directory(pack:SLALPack) -> None:
@@ -23,7 +23,7 @@ class SLALRepairer:
             
 
 
-    def _correct_slal_issues(pack: SLALPack):
+    def _correct_slal_gender_from_animation_source(pack: SLALPack):
         group: PackGroup
         for group in pack.groups.values():
             if group.animation_source is not None:

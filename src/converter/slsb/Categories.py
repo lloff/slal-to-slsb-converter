@@ -52,16 +52,16 @@ class Categories:
         return categories
 
     def update_sub_categories(self, tags: list[str], scene_name: str, anim_dir_name: str) -> None:  
-        self.sub_categories.unconscious = Tags.if_in_tags(tags, scene_name, anim_dir_name, Keywords.unconscious) 
+        self.sub_categories.unconscious = Tags.if_in_tags(tags, Keywords.unconscious, scene_name, anim_dir_name) 
         self.sub_categories.gore = 'gore' in tags
-        self.sub_categories.amputee = Tags.if_in_tags(tags, scene_name, anim_dir_name, ['amputee'])
-        self.sub_categories.ryona = Tags.if_in_tags(tags, scene_name, anim_dir_name, ['nya', 'psycheslavepunishment'])
-        self.sub_categories.humiliation = Tags.if_in_tags(tags, scene_name, anim_dir_name, ['humiliation', 'punishment'])
+        self.sub_categories.amputee = Tags.if_in_tags(tags, ['amputee'], scene_name, anim_dir_name)
+        self.sub_categories.ryona = Tags.if_in_tags(tags, ['nya', 'psycheslavepunishment'], scene_name, anim_dir_name)
+        self.sub_categories.humiliation = Tags.if_in_tags(tags, ['humiliation', 'punishment'], scene_name, anim_dir_name)
         self.sub_categories.asphyxiation = 'asphyxiation' in tags
         self.sub_categories.spanking = 'spanking' in tags
-        self.sub_categories.dominant = Tags.if_in_tags(tags, scene_name, anim_dir_name, Keywords.dominant)
+        self.sub_categories.dominant = Tags.if_in_tags(tags, Keywords.dominant, scene_name, anim_dir_name)
         
-        self.sub_categories.forced = Tags.if_in_tags(tags, scene_name, anim_dir_name, Keywords.forced)
+        self.sub_categories.forced = Tags.if_in_tags(tags, Keywords.forced, scene_name, anim_dir_name)
         ## Note: for forced, I removed the check for 'Keywords.uses_only_agg_tag' because is there ever going to be a use of the 'aggressive' tag without it being forced?
         ## NOTE: Some animators do distinguish between the two when they use both aggressive and forced. But the animators mentioned in this list don't use the forced tag at all
         ## so that's why we assume that aggressive for them is forced while for others aggressive can indicate DD stuff too for example (which falls in dominant subcategory)

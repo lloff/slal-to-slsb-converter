@@ -36,7 +36,7 @@ class Exporter:
                 proc = subprocess.Popen(f"{Arguments.slsb_path} build --in \"{edited_path}\" --out \"{pack.out_dir}\"", stdout=subprocess.PIPE)
 
                 for line in proc.stdout:
-                  logging.getLogger().debug(f"{pack.toString()} | " + line)
+                  logging.getLogger().debug(f"{pack.toString()} | {line}")
                 proc.wait()
 
                 shutil.copyfile(edited_path, pack.out_dir + '/SKSE/Sexlab/Registry/Source/' + group.slsb_json_filename)

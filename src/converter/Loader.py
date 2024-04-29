@@ -10,6 +10,8 @@ import pathlib
 import json
 import json
 
+from converter.slate.SlateActionLog import SlateActionLog
+from converter.slate.SlateActionLogs import SlateActionLogs
 from converter.slsb.SLSBGroupSchema import SLSBGroupchema
 
 class Loader:
@@ -92,7 +94,7 @@ class Loader:
 
 
 
-    def load_SLSBs(pack: SLALPack):
+    def load_SLSBs(pack: SLALPack) -> None:
         group: PackGroup
         for group in pack.groups.values():
 
@@ -113,3 +115,19 @@ class Loader:
                 group.slsb_json: SLSBGroupchema = schema.load(js)
             except ValidationError as err:
                 logging.getLogger().exception(f"{pack.toString()} | JSON Schema Error: {err.messages}")
+
+
+    def load_slate_action_logs() -> None:
+        if Arguments.slate_path is not None:
+            for filename in os.listdir(Arguments.slate_path):
+                path = os.path.join(Arguments.slate_path, filename)
+                if os.path.isfile(path) and filename.startswith('SLATE_ActionLog') and filename.endswith('.json'):
+
+                    with open(path, "r") as file:
+                        js = json.load(file) ## TODO: Some example files for this would be lovely
+                    
+                    SlateActionLogs.parse_slate_action_log(js)
+
+
+
+            

@@ -46,7 +46,7 @@ class FNISBehavior:
 
         proc = subprocess.Popen(f"./commandlinefnisformodders.exe \"{full_path}\"", stdout=subprocess.PIPE,  encoding='utf-8')
         for line in proc.stdout:
-            logging.getLogger().debug(f"{pack.toString()} | " + line)
+            if len(line.strip()) > 0: logging.getLogger().info(f"{pack.toString()} | {line.strip()}")
         proc.wait()
         
 

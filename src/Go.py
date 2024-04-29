@@ -1,4 +1,5 @@
 from converter.Arguments import Arguments
+from converter.Loader import Loader
 from converter.SLALPackConverter import SLALPackConverter
 
 import argparse
@@ -6,7 +7,19 @@ import os
 import shutil
 
 class Go:
-    def parse_arguments():
+    def go() -> None:
+        Go._parse_arguments()
+
+        Go._setup_folders()
+
+        Go._load_slate_action_logs()
+
+        Go._convert_all()
+
+        Go._clean()
+
+
+    def _parse_arguments() -> None:
         parser = argparse.ArgumentParser(
                             prog='Sexlab Catalytic Converter',
                             description='Converts SLAL anims to SLSB automagically')
@@ -23,7 +36,7 @@ class Go:
 
         Arguments.load(parser.parse_args())
     
-    def setup_folders():
+    def _setup_folders() -> None:
         if os.path.exists(Arguments.parent_dir + "\\conversion"):
             shutil.rmtree(Arguments.parent_dir + "\\conversion")
 
@@ -32,10 +45,13 @@ class Go:
 
         os.makedirs(Arguments.temp_dir + '\\edited')
 
-    def clean():
+    def _clean() -> None:
         if Arguments.clean:
             shutil.rmtree(Arguments.temp_dir)
 
-    def convert_all():
+    def _load_slate_action_logs() -> None:
+        Loader.load_slate_action_logs()
+
+    def _convert_all() -> None:
         for dir in os.listdir(Arguments.parent_dir):
             SLALPackConverter.start(dir)

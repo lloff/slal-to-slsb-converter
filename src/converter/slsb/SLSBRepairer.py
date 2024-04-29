@@ -1,4 +1,5 @@
 import logging
+import time
 from converter.slsb.Categories import Categories
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
 from converter.slal.SLALPack import PackGroup, SLALPack
@@ -7,9 +8,12 @@ from converter.Arguments import Arguments
 from converter.slsb.TagRepairer import TagRepairer
 
 class SLSBRepairer:
+    start = None
+
     def repair(pack: SLALPack) -> None:
         group: PackGroup
         for group in pack.groups.values():
+            SLSBRepairer.start = time.time()
 
             logging.getLogger().info(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json")
 
@@ -28,24 +32,24 @@ class SLSBRepairer:
             for stage in stages:
                 SLSBRepairer._process_stage(stage, scene['name'], pack, group, scene['furniture'])
 
+        total_time = time.time() - SLSBRepairer.start
+
+        logging.getLogger().debug(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json Took: {round(total_time)}s")
+
 
     def _process_stage(stage: StageSchema, scene_name: str, pack: SLALPack, group: PackGroup, furniture: FurnitureSchema) -> None:
-            
-            ##TODO: by here, anim_dir should be group.slal_json['name'], and that one works for animations or not
-            anim_dir = ''
-            if (group.animation_source is not None):
-                anim_dir = group.animation_source.anim_dir
+            group_name = group.slal_json['name']
             
             tags: list[str] = [tag.lower().strip() for tag in stage['tags']]
 
-            TagRepairer.insert_slate_tags(pack, tags, scene_name)
-            TagRepairer.append_missing_tags(tags, scene_name, anim_dir)
+            TagRepairer.insert_slate_tags(tags, scene_name)
+            TagRepairer.append_missing_tags(tags, scene_name, group_name)
             TagRepairer.incorporate_stage_tags(tags, pack, stage['id'])
             TagRepairer.correct_tag_spellings(tags)
 
             categories: Categories = Categories.get_categories(tags)  
 
-            categories.update_sub_categories(tags, scene_name, anim_dir)
+            categories.update_sub_categories(tags, scene_name, group_name)
                     
             positions: list[PositionSchema] = stage['positions']
 

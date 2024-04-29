@@ -1,4 +1,4 @@
-from converter.slate.SlateParser import SlateParser
+from converter.slate.SlateActionLogs import SlateActionLogs
 from converter.animation.Stage import ActorStage, AnimationStage
 from converter.animation.Actor import Actor
 from converter.animation.Animation import Animation
@@ -13,13 +13,12 @@ import shutil
 
 class TagRepairer:
 
-    def insert_slate_tags(pack: SLALPack, tags: list[str], stage_name):
-        slate_action_logs = SlateParser.parse(pack)
+    def insert_slate_tags(tags: list[str], stage_name) -> None:
 
-        if slate_action_logs is not None:
+        if SlateActionLogs.slate_action_logs is not None:
             TagToAdd = ''
             TagToRemove = ''
-            for slate_action_log in slate_action_logs:
+            for slate_action_log in SlateActionLogs.slate_action_logs:
                 for action in slate_action_log.actions:
                     if stage_name.lower() in action['anim'].lower():
                         if action['action'].lower() == 'addtag':
@@ -47,8 +46,7 @@ class TagRepairer:
 
         Tags.if_then_add(tags, scene_name, anim_dir_name, Keywords.furniture, 'furniture')
 
-        if 'invisfurn' in tags and 'furniture' in tags:
-            tags.remove('furniture')
+        Tags.if_then_remove(tags, ['invisfurn', 'furniture'], '', 'furniture')
         
         Tags.if_then_add(tags, scene_name, anim_dir_name, ['facesit'], 'facesitting')
 
@@ -66,8 +64,7 @@ class TagRepairer:
         
         Tags.if_then_add(tags, scene_name, anim_dir_name, ['lying', 'laying'], 'triplepenetration')
            
-        if 'lying' in tags and 'laying' in tags and 'eggs' not in tags:
-            tags.remove('laying')
+        Tags.if_then_remove(tags, ['laying', 'lying'], ['eggs'], 'laying')
 
         Tags.if_then_add(tags, scene_name, anim_dir_name, ['rimjob'], 'rimming')
 
@@ -82,9 +79,7 @@ class TagRepairer:
                 
 
     def incorporate_stage_tags(tags: list[str], pack: SLALPack, stage_num: int):
-        slate_action_logs = SlateParser.parse(pack)
-
-        if(slate_action_logs is not None):
+        if (SlateActionLogs.slate_action_logs is not None):
             asl_en = str(stage_num) + "en"  # end_stage
             if asl_en in tags:
                 stage_num = stage_num - 1
@@ -252,7 +247,7 @@ class TagRepairer:
 
             sex: SexSchema = position['sex']
             extra: PositionExtraSchema = position['extra']
-            if Tags.if_in_tags(tags, event_name, '', ['vampirefemale', 'vampirelesbian', 'femdom', 'cowgirl', 'vampfeedf']):
+            if Tags.if_in_tags(tags, ['vampirefemale', 'vampirelesbian', 'femdom', 'cowgirl', 'vampfeedf'], event_name):
                 extra['vampire'] = sex['female']
             else:
                 extra['vampire'] = sex['male']
