@@ -21,7 +21,7 @@ class Arguments:
         
         Arguments.author = args.author
 
-        Arguments.temp_dir = args.temp
+        Arguments.temp_dir = args.temp if args.temp is not None and len(args.temp) > 0 else '/temporary'
 
         Arguments.no_build = args.no_build
         Arguments.clean = args.clean

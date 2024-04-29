@@ -1,3 +1,4 @@
+import logging
 from converter.slsb.Categories import Categories
 from converter.slsb.AnimatorSpecificProcessor import AnimatorSpecificProcessor
 from converter.slal.SLALPack import PackGroup, SLALPack
@@ -10,7 +11,7 @@ class SLSBRepairer:
         group: PackGroup
         for group in pack.groups.values():
 
-            print(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json")
+            logging.getLogger().info(f"{pack.toString()} | {group.slsb_json_filename} | Editing SLSB Json")
 
             SLSBRepairer._correct(group, pack)
 

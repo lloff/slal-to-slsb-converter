@@ -1,3 +1,6 @@
+import logging
+
+
 class ActorStage:
     sos = None
     strap_on =  False
@@ -28,7 +31,7 @@ class ActorStage:
                 self.object = value.strip('""')
             elif attr in ["forward", "side", "up", "rotate"]:
                 self.attributes[attr] = float(value)
-                #print(f"{attr}: {current_stage_data[attr]}")
+                logging.getLogger().debug(f"{attr}: {self.attributes[attr]}")
 
 class AnimationStage:
     sound = None

@@ -1,3 +1,4 @@
+import logging
 from converter.fnis.FNISIterate import FNISIterate
 from converter.slal.SLALPack import SLALPack
 from converter.fnis.FNISAnimationStage import FNISAnimationStage
@@ -5,15 +6,15 @@ import os
 
 class FNISParser:
             
-    def convert(pack: SLALPack):
-        print(f"{pack.toString()} | Parsing FNIS animation stages")
+    def convert(pack: SLALPack) -> None:
+        logging.getLogger().info(f"{pack.toString()} | Parsing FNIS animation stages")
         for filename in os.listdir(pack.actor_dir):
             path = os.path.join(pack.actor_dir, filename)
 
             if os.path.isdir(path):
                 FNISIterate.iterate_folders(path, pack, FNISParser.parse_fnis_list)
 
-        print(f"{pack.toString()} | {len(pack.FNIS_data)} FNIS animation stages parsed") 
+        logging.getLogger().info(f"{pack.toString()} | {len(pack.FNIS_data)} FNIS animation stages parsed") 
 
 
     def parse_fnis_list(parent_dir, file, pack: SLALPack):

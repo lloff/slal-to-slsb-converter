@@ -1,7 +1,10 @@
+import logging
 from Go import Go
 import time
 
 start = time.time()
+
+logging.getLogger().setLevel(logging.WARNING)
 
 Go.parse_arguments()
 
@@ -13,4 +16,4 @@ Go.clean()
 
 total_time = time.time() - start
 
-print(f"Time Taken: {round(total_time)}")
+logging.getLogger().log(f"Time Taken: {round(total_time)}")

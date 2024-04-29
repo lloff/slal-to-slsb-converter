@@ -1,3 +1,4 @@
+import logging
 from converter.animation.AnimationSource import AnimationSource
 from converter.slal.SLALGroupSchema import SLALGroupSchema
 from converter.slsb.SLSBGroupSchema import SLSBGroupchema
@@ -8,12 +9,13 @@ import os
 class SLALPack:
 
     def __init__(self, dir):
+
         self.name = dir
         self.working_dir = os.path.join(Arguments.parent_dir, dir)
         self.slal_dir = self.working_dir + "\\SLAnims\\json"
         self.anim_source_dir = self.working_dir + "\\SLAnims\\source"
         
-        self.out_dir = Arguments.parent_dir + "\\conversion\\" + dir
+        self.out_dir = Arguments.parent_dir + "\\conversion\\" + dir.replace(" ", '')
 
         self.actor_dir = self.working_dir + '\\meshes\\actors'
 
@@ -21,7 +23,7 @@ class SLALPack:
 
         self.groups: dict[str, PackGroup] = dict()
 
-        print(f"{self.toString()} | Found")
+        logging.getLogger().log(f"{self.toString()} | Found")
         
     
     def validate(self):

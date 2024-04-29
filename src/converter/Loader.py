@@ -1,3 +1,5 @@
+import logging
+import sys
 from marshmallow import ValidationError
 from converter.slal.SLALGroupSchema import SLALGroupSchema
 from converter.slal.SLALPack import PackGroup, SLALPack
@@ -5,13 +7,8 @@ from converter.Arguments import Arguments
 from converter.animation.AnimationSource import AnimationSource
 import os
 import pathlib
-import subprocess
-import shutil
 import json
-import argparse
 import json
-import re
-import pprint
 
 from converter.slsb.SLSBGroupSchema import SLSBGroupchema
 
@@ -21,7 +18,7 @@ class Loader:
         Loader._init(pack)
         Loader._load_SLALs(pack)
         Loader._load_animation_sources(pack)
-
+        
     def _init(pack: SLALPack) -> None:
         for filename in os.listdir(pack.slal_dir):
              
@@ -34,29 +31,35 @@ class Loader:
 
                 pack.groups[group.name] = group
 
-        print(f"{pack.toString()} | {len(pack.groups)} Groups Found")
+        logging.getLogger().info(f"{pack.toString()} | {len(pack.groups)} Groups Found")
 
 
-    def _load_SLALs(pack: SLALPack):
+    def _load_SLALs(pack: SLALPack) -> None:
         group: PackGroup
         for group in pack.groups.values():
 
             path = os.path.join(pack.slal_dir, group.slal_json_filename)
 
-            with open(path, "r") as file:
-                data = json.load(file)
+            try:
+                with open(path, "r", encoding='utf-8') as file: 
+                    js = json.load(file)
 
-                schema = SLALGroupSchema()
+            except:
+                logging.getLogger().error(sys.exc_info())
+                exit(1)
 
-                try:
-                    group.slal_json = schema.load(data)
-                except ValidationError as err:
-                    print(err.messages)
+            schema = SLALGroupSchema()
+
+            try:
+                group.slal_json = schema.load(js)
+            except ValidationError as err:
+                logging.getLogger().error(err.messages)
+                exit(1)
 
 
 
-    def _load_animation_sources(pack: SLALPack):
-        print(f"{pack.toString()} | Loading animation source files")
+    def _load_animation_sources(pack: SLALPack) -> None:
+        logging.getLogger().info(f"{pack.toString()} | Loading animation source files")
         
         files: list[str] = os.listdir(pack.anim_source_dir)
 
@@ -77,10 +80,10 @@ class Loader:
 
                     group.animation_source = animation_source
             else:
-                print(f"{pack.toString()} | {group.name} | WARNING: animation source not found")
+                logging.getLogger().warning(f"{pack.toString()} | {group.name} | WARNING: animation source not found")
 
         if len(files) > 0:
-            print(f"{pack.toString()} | {group.name} | WARNING: Extra animation source files found: {files}")
+            logging.getLogger().warning(f"{pack.toString()} | {group.name} | WARNING: Extra animation source files found: {files}")
 
 
 
@@ -91,11 +94,18 @@ class Loader:
 
             path = os.path.join(Arguments.temp_dir, group.slsb_json_filename)
 
-            with open(path, 'r') as file:
-                data = json.load(file)
+            try:
+                with open(path, "r", encoding='utf-8') as file: 
+                    js = json.load(file)
 
-                schema = SLSBGroupchema()
-                try:
-                    group.slsb_json: SLSBGroupchema = schema.load(data)
-                except ValidationError as err:
-                    print(err.messages)
+            except:
+                logging.getLogger().error(sys.exc_info())
+                exit(1)
+
+           
+
+            schema = SLSBGroupchema()
+            try:
+                group.slsb_json: SLSBGroupchema = schema.load(js)
+            except ValidationError as err:
+                logging.getLogger().error(err.messages)

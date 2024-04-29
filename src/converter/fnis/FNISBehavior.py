@@ -1,12 +1,8 @@
+import logging
 import os
-import pathlib
 import subprocess
 import shutil
-import json
-import argparse
-import json
 import re
-import pprint
 
 from converter.Keywords import Keywords
 from converter.fnis.FNISIterate import FNISIterate
@@ -16,38 +12,59 @@ from converter.Arguments import Arguments
 class FNISBehavior:  
 
     def build(pack: SLALPack):
-        print(f"{pack.toString()} | Building FNIS behaviors")
+        logging.getLogger().info(f"{pack.toString()} | Building FNIS behaviors")
         
         if Arguments.fnis_path is not None:
             anim_dir = pack.out_dir + '\\meshes\\actors'
             FNISIterate.iterate_folders(anim_dir, pack, FNISBehavior.edit_output_fnis)
             FNISIterate.iterate_folders(anim_dir, pack, FNISBehavior.build_behavior)
 
-    def build_behavior(parent_dir, list_name, pack: SLALPack):
+    def build_behavior(parent_dir, filename, pack: SLALPack):
 
-        print(f"{pack.toString()} | Building {list_name}")
+        logging.getLogger().info(f"{pack.toString()} | Building {filename}")
 
-        list_path = os.path.join(parent_dir, list_name)
-
-        if '_canine' in list_name.lower():
+        if '_canine' in filename.lower():
             return
 
-        behavior_file_name = list_name.lower().replace('fnis_', '')
-        behavior_file_name = behavior_file_name.lower().replace('_list.txt', '')
-
-        behavior_file_name = 'FNIS_' + behavior_file_name + '_Behavior.hkx'
 
         cwd = os.getcwd()
         os.chdir(Arguments.fnis_path)
-        output = subprocess.Popen(f"./commandlinefnisformodders.exe \"{list_path}\"", stdout=subprocess.PIPE).stdout.read()
+
+        full_path = os.path.join(parent_dir, filename)
+
+        parent_dir_with_spaces = None
+
+        if " " in filename or " " in parent_dir:
+            parent_dir_with_spaces = parent_dir
+
+            parent_dir = parent_dir.replace(' ', '')
+
+            full_path = os.path.join(parent_dir, filename).replace(' ', '')
+
+            os.rename(parent_dir_with_spaces, parent_dir)
+            shutil.move(os.path.join(parent_dir, filename), full_path)
+
+        proc = subprocess.Popen(f"./commandlinefnisformodders.exe \"{full_path}\"", stdout=subprocess.PIPE,  encoding='utf-8')
+        for line in proc.stdout:
+            logging.getLogger().debug(f"{pack.toString()} | " + line)
+        proc.wait()
         
-        to_print: list[str] = output.decode().split("\n")
-        [print(f"{pack.toString()} | " + line) for line in to_print]
+
+        if parent_dir_with_spaces is not None:
+            shutil.move(full_path, os.path.join(parent_dir, filename))
+            os.rename(parent_dir, parent_dir_with_spaces)
+            
+
+
+        behavior_file_name: str = filename.lower().replace('fnis_', '')
+        behavior_file_name = behavior_file_name.lower().replace('_list.txt', '')
+
+        behavior_file_name = 'FNIS_' + behavior_file_name + '_Behavior.hkx'
         
         
         os.chdir(cwd)
 
-        out_path = os.path.normpath(list_path)
+        out_path = os.path.normpath(full_path)
         out_path = out_path.split(os.sep)
 
         start_index = -1
@@ -61,7 +78,7 @@ class FNISBehavior:
             elif split == 'animations':
                 end_index = i
 
-        behavior_folder = 'behaviors' if '_wolf' not in list_name.lower() else 'behaviors wolf'
+        behavior_folder = 'behaviors' if '_wolf' not in filename.lower() else 'behaviors wolf'
         behavior_path = os.path.join(Arguments.skyrim_path, 'data', *out_path[start_index:end_index], behavior_folder, behavior_file_name)
 
         if os.path.exists(behavior_path):

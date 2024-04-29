@@ -1,3 +1,4 @@
+import logging
 from converter.Exporter import Exporter
 from converter.Loader import Loader
 from converter.fnis.FNISBehavior import FNISBehavior
@@ -12,7 +13,7 @@ class SLALPackConverter:
     def start(dir):
         pack = SLALPack(dir);
         if not pack.validate():
-            print(f"Pack {pack.toString()} | failed validation")
+            logging.getLogger().error(f"Pack {pack.toString()} | failed validation")
             return;
 
         pack.setup()
@@ -33,4 +34,4 @@ class SLALPackConverter:
 
         FNISBehavior.build(pack)
 
-        print(f"Pack {pack.toString()} | Done")
+        logging.getLogger().log(f"Pack {pack.toString()} | Done")
