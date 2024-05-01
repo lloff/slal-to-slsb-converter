@@ -1,13 +1,12 @@
-import logging
-import os
-import subprocess
-import shutil
-import re
-
 from converter.Keywords import Keywords
 from converter.fnis.FNISIterate import FNISIterate
 from converter.slal.SLALPack import SLALPack
 from converter.Arguments import Arguments
+import subprocess
+import logging
+import shutil
+import os
+import re
 
 class FNISBehavior:  
 

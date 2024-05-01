@@ -5,7 +5,7 @@ from converter.fnis.FNISBehavior import FNISBehavior
 from converter.slal.SLALPack import SLALPack
 from converter.slal.SLALRepairer import SLALRepairer
 from converter.fnis.FNISParser import FNISParser
-from converter.slsb.SLSBRepairer import SLSBRepairer
+from converter.slsb.SLSBEditor import SLSBRepairer
 
 
 class SLALPackConverter:

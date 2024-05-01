@@ -4,7 +4,7 @@ from marshmallow import ValidationError
 from converter.slal.SLALGroupSchema import SLALGroupSchema
 from converter.slal.SLALPack import PackGroup, SLALPack
 from converter.Arguments import Arguments
-from converter.animation.AnimationSource import AnimationSource
+from converter.source.SourceParser import AnimationSource
 import os
 import pathlib
 import json

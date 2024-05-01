@@ -1,10 +1,9 @@
-from converter.animation.Animation import Animation
+from converter.source.SourceParserAnim import Animation
 import re
 
 class AnimationSource:
         filename: str = None
         anim_dir: str = None
-        anim_id_prefix: str = None
         anim_name_prefix: str = None
 
         current_animation = None
@@ -38,12 +37,8 @@ class AnimationSource:
         def process_metadata(self, line):
             if re.match(r'^\s*anim_dir\("([^"]*)"\)', line):
                 self.anim_dir = re.search(r'anim_dir\("([^"]*)"\)', line).group(1)
-            elif re.match(r'^\s*anim_id_prefix\("([^"]*)"\)', line):
-                self.anim_id_prefix = re.search(r'anim_id_prefix\("([^"]*)"\)', line).group(1)
             elif re.match(r'^\s*anim_name_prefix\("([^"]*)"\)', line):
                 self.anim_name_prefix = re.search(r'anim_name_prefix\("([^"]*)"\)', line).group(1)
-            elif re.match(r'^\s*common_tags\("([^"]*)"', line):
-                self.common_tags = re.search(r'common_tags\("([^"]*)"', line).group(1)
 
         def process_animation_start(self, line):
             if re.match(r'^\s*Animation\(', line):
@@ -63,7 +58,4 @@ class AnimationSource:
         def start_new_animation(self, line):
             self.current_animation = Animation()
             self.current_animation.parse_line(line)
-
-            
-                         
 
